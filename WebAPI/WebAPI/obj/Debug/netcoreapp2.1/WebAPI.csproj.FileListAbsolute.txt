@@ -1,0 +1,15 @@
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.csproj.CoreCompileInputs.cache
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.AssemblyInfoInputs.cache
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.AssemblyInfo.cs
+D:\Work\Git\Draw Time\WebAPI\WebAPI\bin\Debug\netcoreapp2.1\WebAPI.deps.json
+D:\Work\Git\Draw Time\WebAPI\WebAPI\bin\Debug\netcoreapp2.1\WebAPI.runtimeconfig.json
+D:\Work\Git\Draw Time\WebAPI\WebAPI\bin\Debug\netcoreapp2.1\WebAPI.runtimeconfig.dev.json
+D:\Work\Git\Draw Time\WebAPI\WebAPI\bin\Debug\netcoreapp2.1\WebAPI.dll
+D:\Work\Git\Draw Time\WebAPI\WebAPI\bin\Debug\netcoreapp2.1\WebAPI.pdb
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.csprojAssemblyReference.cache
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.RazorAssemblyInfo.cache
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.RazorAssemblyInfo.cs
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.RazorTargetAssemblyInfo.cache
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.dll
+D:\Work\Git\Draw Time\WebAPI\WebAPI\obj\Debug\netcoreapp2.1\WebAPI.pdb
