@@ -1,5 +1,5 @@
 <template>
-    <v-card @click="$router.push('/Participants/' + draw.id)">
+    <v-card @click="canPlay(draw)">
         <v-card-text>
             <table style="width: 100%;">
                 <tr>
@@ -30,6 +30,6 @@
 
 <script>
 export default {
-    props: ['draw']
+    props: ['draw',"canPlay"]
 }
 </script>

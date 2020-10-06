@@ -22,6 +22,8 @@
                         <label>Pin</label>
                         <v-text-field v-model="pin" outlined dense></v-text-field>
                         <v-checkbox v-model="inactive" label="Inactive"></v-checkbox>
+                         <label>Role</label>
+                        <v-select v-model="role" :items="roles" outlined dense></v-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -44,7 +46,21 @@
                 uid: '',
                 pwd: '',
                 pin: '',
-                inactive: false
+                role:null,
+                inactive: false,
+                roles: [{
+                        text: "Administrator",
+                        value: 1
+                    },
+                    {
+                        text: "Game Manager",
+                        value: 8
+                    }, {
+                        text: "Participiant Manager",
+                        value: 9
+                    }
+                ]
+
             }
         },
         mounted() {
@@ -55,7 +71,7 @@
                 let self = this;
 
                 let request = {
-                    role_id: 1,
+                    role_id: self.role,
                     user: {
                         firstname: self.firstname,
                         lastname: self.lastname,

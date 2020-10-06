@@ -51,6 +51,7 @@ namespace WebAPI.Controllers
             try
             {
                 retval.dt_draw = _context.dt_draw.Find(draw_id);
+                retval.dt_draw.prizes = _context.dt_draw_prize.Where(x => x.draw_id == draw_id).ToList();
             }
             catch (Exception exc)
             {
@@ -88,6 +89,23 @@ namespace WebAPI.Controllers
             {
                 _context.Entry(dt_draw).State = EntityState.Modified;
                 _context.SaveChanges();
+
+              var existingPrizes = _context.dt_draw_prize.Where(x=> x.draw_id == dt_draw.id).ToList();
+                if (existingPrizes!=null) {
+                    foreach (var item in existingPrizes)
+                    {
+                        _context.Entry(item).State = EntityState.Deleted;
+                        _context.SaveChanges();
+                    }
+                }
+                if (dt_draw.prizes!=null) {
+                    foreach (var item in dt_draw.prizes)
+                    {
+                      var newPrize =   _context.dt_draw_prize.Add(item);
+                        _context.SaveChanges();
+                    }
+                }
+               
             }
             catch (Exception exc)
             {

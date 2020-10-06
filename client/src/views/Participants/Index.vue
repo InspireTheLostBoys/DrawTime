@@ -3,8 +3,8 @@
         <h2 class="mt-2">{{ dt_draw.draw_name }}</h2>
         <div class="mt-1">502 tickets 23 persons</div>
         <h4 class="mt-1">Prize value: R1750</h4>
-        <v-btn class="my-3" large block color="primary" @click="editDraw">Edit Draw</v-btn>
-        <v-btn class="my-3" large block color="primary" @click="addEntry">Add Entry</v-btn>
+        <v-btn class="my-3" large block color="primary" @click="editDraw" v-if="userAccess.role_id!=9">Edit Draw</v-btn>
+        <v-btn class="my-3" large block color="primary" @click="addEntry" >Add Entry</v-btn>
         <v-text-field append-icon="mdi-magnify" placeholder="Search..." dense hide-details outlined class="mb-3">
         </v-text-field>
         <v-simple-table dense fixed-header height="calc(100vh - 240px)">
@@ -32,6 +32,11 @@
                         <td>{{ item.tickets }}</td>
                         <td>
                             <a @click.prevent="editEntry(item)" href="#">Edit</a>
+                            <v-btn icon @click="deleteEntry(item)" color="error">
+                                <v-icon>
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
                         </td>
                     </tr>
                 </tbody>
@@ -51,18 +56,22 @@
             </v-list>
         </v-bottom-sheet>
         <ParticipantsMaint ref="participantsMaint" />
+        <YesNoModal ref="YesNoModal" />
     </v-container>
 </template>
 
 <script>
     import ParticipantsMaint from './components/participant-maint-modal.vue'
+    import YesNoModal from '@/components/YesNoModal.vue'
 
     export default {
         components: {
-            ParticipantsMaint
+            ParticipantsMaint,
+            YesNoModal
         },
         data() {
             return {
+                userAccess:null,
                 dt_draw: null,
                 dt_draw_participants: null,
                 sheet: false,
@@ -98,8 +107,27 @@
             let self = this;
             self.getDrawDetails();
             self.getDrawParticipants();
+            self.getUserAccess()
         },
         methods: {
+             getUserAccess() {
+                let self = this
+                console.log(localStorage.getItem("userDetails"));
+
+                self.userAccess = JSON.parse(localStorage.getItem("userDetails"));
+            },
+            deleteEntry(item) {
+                let self = this
+                self.$refs.YesNoModal.show("error", "Delete Entry", "Are you sure you wish to delete this entry?",
+                    value => {
+                        if (value) {
+                            self.delete('dt_draw_participant?participant_id=' + item.id)
+                                .then(r => {
+                                    self.dt_draw_participants.splice(self.dt_draw_participants.indexOf(item), 1)
+                                })
+                        }
+                    })
+            },
             show() {
                 let self = this;
                 self.dialog = true;
@@ -152,7 +180,7 @@
                 self.$refs.participantsMaint.show(entry, false, participant => {
                     self.put('dt_draw_participant', participant)
                         .then(r => {
-                            for(var prop in entry) {
+                            for (var prop in entry) {
                                 entry[prop] = participant[prop];
                             }
                         })

@@ -30,8 +30,16 @@ namespace WebAPI.Controllers
             try
             {
                 var loginCheck = _context.user.Where(x => x.uid.ToUpper() == loginRequest.uid.ToUpper() && x.pin == loginRequest.pin).FirstOrDefault();
-
-                if(loginCheck == null)
+                retval.user_id = loginCheck.id;
+                user_role user_Role = _context.user_role.Where(x => x.user_id == retval.user_id).FirstOrDefault();
+                if (user_Role == null)
+                {
+                }
+                else
+                {
+                    retval.role_id = user_Role.role_id_1;
+                }
+                if (loginCheck == null)
                 {
                     retval.SetError("Failed to login with the details provided.");
                 }
@@ -88,7 +96,7 @@ namespace WebAPI.Controllers
                     }
                     else
                     {
-
+                        retval.role_id = user_Role.role_id_1;
                     }
                 }
             }
@@ -136,6 +144,10 @@ namespace WebAPI.Controllers
             try
             {
                 _context.Entry(userRequest.user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                var existingRole = _context.user_role.Where(x => x.user_id == userRequest.user.id).FirstOrDefault();
+                existingRole.role_id_1 = userRequest.role_id;
+                _context.Entry(existingRole).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 _context.SaveChanges();
             }
             catch (Exception exc)

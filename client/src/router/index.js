@@ -9,6 +9,8 @@ import Landing from '../views/Landing/Index.vue'
 // Draws
 import DrawsCreate from '../views/Draws/Create.vue'
 import DrawsEdit from '../views/Draws/Edit.vue'
+import DrawStart from '../views/Draws/StartDraw.vue'
+
 
 // Participants
 import Participants from '../views/Participants/Index.vue'
@@ -19,9 +21,17 @@ import SystemUsers from '../views/Settings/SystemUsers/Index.vue'
 import CreateSystemUsers from '../views/Settings/SystemUsers/Create.vue'
 import EditSystemUsers from '../views/Settings/SystemUsers/Edit.vue'
 
+// Login
+import Login from '../views/Login.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/Login',
+    name: 'login',
+    component: Login,
+  },
   {
     path: '/',
     name: 'main',
@@ -31,6 +41,11 @@ const routes = [
         path: '/Landing',
         name: 'landing',
         component: Landing,
+      },
+        {
+        path: '/DrawStart/:draw_id',
+        name: 'draw-start',
+        component: DrawStart,
       },
       {
         path: '/CreateDraw',

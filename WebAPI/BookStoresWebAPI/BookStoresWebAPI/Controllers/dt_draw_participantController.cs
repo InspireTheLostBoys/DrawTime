@@ -89,7 +89,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    _context.Entry(dt_draw_participant).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.Entry(dt_draw_participant).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
                     _context.SaveChanges();
                 }
             }

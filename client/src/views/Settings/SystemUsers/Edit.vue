@@ -35,6 +35,8 @@
                         <label>Pin</label>
                         <v-text-field v-model="user.pin" outlined dense></v-text-field>
                         <v-checkbox v-model="user.inactive" label="Inactive"></v-checkbox>
+                        <label>Role</label>
+                        <v-select v-model="role" :items="roles" outlined dense></v-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -51,7 +53,20 @@
     export default {
         data() {
             return {
-                user: null
+                user: null,
+                roles: [{
+                        text: "Administrator",
+                        value: 1
+                    },
+                    {
+                        text: "Game Manager",
+                        value: 8
+                    }, {
+                        text: "Participiant Manager",
+                        value: 9
+                    }
+                ],
+                role: null,
             }
         },
         mounted() {
@@ -67,13 +82,14 @@
                 self.get('user/' + user_id)
                     .then(r => {
                         self.user = r.data.user;
+                        self.role = r.data.role_id
                     })
             },
             updateSystemUser() {
                 let self = this;
 
                 let request = {
-                    role_id: 1,
+                    role_id: self.role,
                     user: self.user
                 }
 

@@ -21,9 +21,12 @@
                             <div style="height: 30px"></div>
                             <h1>DUE: R0</h1>
                         </v-col>
-                        <v-col cols="12" style="text-align: right;" v-if="isAdd">
-                            <v-checkbox v-model="accepts" class="ma-0 mt-3" label="Participant accept the T's & C's">
+                        <v-col cols="1" style="text-align: left;" v-if="isAdd">
+                            <v-checkbox class="ma-0 mt-0" v-model="accepts"  >
                             </v-checkbox>
+                        </v-col>
+                        <v-col cols="11">
+                            <a href="#" class="ma-0 mt-2" @click="openTerms"> Participant accept the T's & C's</a>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -33,12 +36,20 @@
                     <v-btn :disabled="!accepts && isAdd" @click="returnParticipant" color="primary">Submit</v-btn>
                 </v-card-actions>
             </v-card>
+
+
         </v-dialog>
+        <termsModal ref="termsModal" />
     </v-row>
 </template>
 
 <script>
+    import termsModal from "./terms-modal.vue"
+
     export default {
+        components: {
+            termsModal
+        },
         data() {
             return {
                 dialog: false,
@@ -49,6 +60,12 @@
             }
         },
         methods: {
+            openTerms() {
+                let self = this
+                console.log("yeet");
+                self.$refs.termsModal.open()
+
+            },
             show(participant, isAdd, afterReturn) {
                 let self = this;
                 self.participant = participant;

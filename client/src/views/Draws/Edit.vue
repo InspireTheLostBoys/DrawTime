@@ -27,11 +27,12 @@
                     <v-text-field v-model="draw.ticket_cost" prefix="R" dense outlined></v-text-field>
                 </v-col>
             </v-row>
-            <!-- <v-row>
+            <v-row>
                 <v-col cols="12">
-                    <PrizeList />
+                    <PrizeList :editPrize="editPrize" :addPrize="addPrize" :prizes="draw.prizes"
+                        :deletePrize="deletePrize" />
                 </v-col>
-            </v-row> -->
+            </v-row>
             <v-row>
                 <v-col cols="12">
                     <v-btn @click="updateDraw" block color="primary" large>Update Draw</v-btn>
@@ -45,17 +46,26 @@
                     </v-btn>
                 </v-col> -->
                 <v-col cols="12" class="pt-0">
-                    <v-btn block color="error" large>Cancel Draw</v-btn>
+                    <v-btn block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
+                </v-col>
+                <v-col cols="12" @click="$router.go(-1)" class="pt-0">
+                    <v-btn block large>Cancel </v-btn>
                 </v-col>
             </v-row>
         </v-container>
         <Participants ref="participantsModal" />
+        <prizeModal ref="prizeModal" />
+        <YesNoModal ref="YesNoModal" />
     </div>
 </template>
 
 <script>
     import PrizeList from './components/prize-list.vue'
     import Participants from './components/participants-modal.vue'
+    import prizeModal from './components/prize-modal.vue'
+    import YesNoModal from '@/components/YesNoModal.vue'
+
+
 
     import {
         Datetime
@@ -65,7 +75,9 @@
         components: {
             PrizeList,
             Datetime,
-            Participants
+            Participants,
+            prizeModal,
+            YesNoModal
         },
         data() {
             return {
@@ -86,11 +98,63 @@
             self.getDraw();
         },
         methods: {
+            cancelDraw() {
+                let self = this
+                self.$refs.YesNoModal.show("error", "Cancel Draw", "Are you sure you wish to cancel this draw?",
+                    value => {
+                        if (value) {
+                            self.draw.cancelled = true
+                            self.put('dt_draw', self.draw)
+                                .then(r => {
+                                    self.$router.push('/Landing')
+                                })
+                        }
+                    })
+
+            },
+            editPrize(item) {
+                let self = this
+                self.$refs.prizeModal.show(item, newPrize => {
+                    let index = self.draw.prizes.indexOf(item)
+                    let addablePrize = JSON.parse(JSON.stringify(newPrize))
+                    for (var prop in self.draw.prizes[index]) {
+                        self.draw.prizes[index][prop] = addablePrize[prop]
+                    }
+                })
+            },
+            deletePrize(item) {
+                let self = this
+                self.$refs.YesNoModal.show("error", "Delete Prize", "Are you sure you wish to delete this prize?",
+                    value => {
+                        if (value) {
+                            self.draw.prizes.splice(self.draw.prizes.indexOf(item), 1)
+                        }
+                    })
+            },
+            addPrize() {
+                let self = this
+                if (self.draw.prizes == null) {
+                    self.draw.prizes = []
+                }
+                let prize = {
+                    id: 0,
+                    draw_id: self.draw.id,
+                    description: "",
+                    sequence_no: 1,
+                    show_value: true,
+                    percentage_of_pot: false,
+                    pot_percentage: 0,
+                    prize_value: 0,
+                }
+
+                self.$refs.prizeModal.show(prize, newPrize => {
+                    let addablePrize = JSON.parse(JSON.stringify(newPrize))
+                    self.draw.prizes.push(addablePrize)
+                })
+            },
             getDraw() {
                 let self = this;
-
                 let drawID = self.$route.params.draw_id;
-
                 self.get('dt_draw/' + drawID)
                     .then(r => {
                         self.draw = r.data.dt_draw;
@@ -98,7 +162,6 @@
             },
             updateDraw() {
                 let self = this;
-
                 self.put('dt_draw', self.draw)
                     .then(r => {
                         self.$router.push('/Landing')

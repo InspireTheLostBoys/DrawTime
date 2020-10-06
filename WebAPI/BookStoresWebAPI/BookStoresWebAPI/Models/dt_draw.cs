@@ -23,5 +23,8 @@ namespace WebAPI.Models
         public bool completed { get; set; }
         public int total_tickets { get; set; }
         public decimal total_pot { get; set; }
+
+        [NotMapped]
+        public List<dt_draw_prize> prizes { get; set; }
     }
 }

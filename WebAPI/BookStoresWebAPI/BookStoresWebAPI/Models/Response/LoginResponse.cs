@@ -7,5 +7,7 @@ namespace WebAPI.Models.Response
 {
     public class LoginResponse : Base
     {
+        public int user_id { get; set; }
+        public int role_id { get; set; }
     }
 }

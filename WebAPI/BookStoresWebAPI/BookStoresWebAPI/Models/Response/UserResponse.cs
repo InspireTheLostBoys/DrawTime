@@ -9,5 +9,6 @@ namespace WebAPI.Models.Response
     {
         public user user { get; set; }
         public List<user> users { get; set; }
+        public int role_id { get; set; }
     }
 }

@@ -1,22 +1,44 @@
 <template>
     <div>
-        <div>Prizes</div>
+        <div>Prizes
+            <v-btn icon @click="addPrize">
+                <v-icon> mdi-plus
+                </v-icon>
+            </v-btn>
+        </div>
+
         <table style="width: 100%;" class="blueTable">
             <tr style="text-align: left">
                 <th>Name</th>
                 <th>Value</th>
                 <th>Action</th>
             </tr>
-            <tr v-for="i in 10" :key="i">
-                <td>Dinner for 2</td>
-                <td>R1000</td>
+            <tr v-if="prizes!=null" v-for="(item,idx) in prizes" :key="idx">
+                <td>{{item.description}} </td>
+                <td v-if="item.show_value">R {{item.prize_value}}</td>
+                <td v-if="item.percentage_of_pot">{{item.pot_percentage}}% of Pot</td>
                 <td>
-                    <a href="#">Edit</a>
+                    <a href="#" @click="editPrize(item)">Edit</a>
+                    <v-btn icon @click="deletePrize(item)" color="error">
+                        <v-icon>
+                            mdi-delete
+                        </v-icon>
+                    </v-btn>
                 </td>
             </tr>
         </table>
     </div>
 </template>
+<script>
+    export default {
+        props: ["prizes", "addPrize","editPrize","deletePrize"],
+        data() {
+            return {
+
+            }
+        }
+    }
+</script>
 
 <style scoped>
     table.blueTable {
