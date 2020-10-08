@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    
+                    retval.Success = true;
                     retval.role_id = user_Role.role_id_1;
                 }
                 if (loginCheck == null)
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
                     retval.Success = false;
                     retval.SetError("Failed to login with the details provided.");
                 }
-                retval.Success = true;
+                
             }
             catch(Exception exc)
             {
