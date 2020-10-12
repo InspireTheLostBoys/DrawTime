@@ -68,6 +68,7 @@ namespace WebAPI.Controllers
 
             try
             {
+                dt_draw.total_pot = dt_draw.ticket_cost * dt_draw.total_tickets;
                 _context.dt_draw.Add(dt_draw);
                 _context.SaveChanges();
                 retval.dt_draw = dt_draw;
@@ -87,6 +88,7 @@ namespace WebAPI.Controllers
 
             try
             {
+                dt_draw.total_pot = dt_draw.ticket_cost * dt_draw.total_tickets;
                 _context.Entry(dt_draw).State = EntityState.Modified;
                 _context.SaveChanges();
 

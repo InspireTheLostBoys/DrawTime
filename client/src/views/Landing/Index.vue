@@ -1,5 +1,6 @@
 <template>
     <div>
+       
         <v-container fluid class="fill-height">
             <v-row>
                 <v-col cols="12" v-for="(draw, idx) in draws" :key="idx">
@@ -8,7 +9,8 @@
             </v-row>
             <v-row v-if="userAccess!=null">
                 <v-col cols="12" style="text-align: center;">
-                    <v-btn color="primary" width="200" to="/CreateDraw" v-if="userAccess.role_id != 9">Create Draw</v-btn>
+                    <v-btn color="primary" width="200" to="/CreateDraw" v-if="userAccess.role_id != 9">Create Draw
+                    </v-btn>
                 </v-col>
                 <v-col cols="12" style="text-align: center;">
                     <v-btn color="info" width="200">History</v-btn>
@@ -45,7 +47,7 @@
                 self.get(`dt_draw/CanPlay?draw_id=${draw.id}`).then(r => {
                     if (r.data) {
                         if (self.userAccess.role_id != 9) {
-                            self.$router.push('/DrawStart/' + draw.id)  
+                            self.$router.push('/DrawStart/' + draw.id)
                         }
                     } else {
                         self.$router.push('/Participants/' + draw.id)
@@ -57,6 +59,8 @@
 
                 self.get('dt_draw')
                     .then(r => {
+                        console.log("draws",r.data);
+                        
                         self.draws = r.data;
                     })
             },
@@ -66,6 +70,6 @@
 
                 self.userAccess = JSON.parse(localStorage.getItem("userDetails"));
             }
-        } 
+        }
     }
 </script>

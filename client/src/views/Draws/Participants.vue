@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div>   
+      <v-toolbar color="primary" dense></v-toolbar>
         <v-container fluid class="fill-height">
             <v-row no-gutters>
                 <v-col cols="12">

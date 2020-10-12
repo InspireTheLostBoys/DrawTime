@@ -26,5 +26,6 @@ namespace WebAPI.Models
 
         [NotMapped]
         public List<dt_draw_prize> prizes { get; set; }
+       
     }
 }

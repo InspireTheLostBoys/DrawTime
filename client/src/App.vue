@@ -1,21 +1,18 @@
 <template>
   <v-app>
     <v-main>
-      <v-toolbar color="primary" dense></v-toolbar>
+      
       <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
+  export default {
+    name: 'App',
 
-export default {
-  name: 'App',
+    components: {},
 
-  components: {
-  },
-
-  data: () => ({
-  }),
-};
+    data: () => ({}),
+  };
 </script>

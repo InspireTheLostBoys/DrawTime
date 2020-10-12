@@ -1,63 +1,67 @@
 <template>
-    <v-container fluid v-if="dt_draw != null">
-        <h2 class="mt-2">{{ dt_draw.draw_name }}</h2>
-        <div class="mt-1">502 tickets 23 persons</div>
-        <h4 class="mt-1">Prize value: R1750</h4>
-        <v-btn class="my-3" large block color="primary" @click="editDraw" v-if="userAccess.role_id!=9">Edit Draw</v-btn>
-        <v-btn class="my-3" large block color="primary" @click="addEntry" >Add Entry</v-btn>
-        <v-text-field append-icon="mdi-magnify" placeholder="Search..." dense hide-details outlined class="mb-3">
-        </v-text-field>
-        <v-simple-table dense fixed-header height="calc(100vh - 240px)">
-            <template v-slot:default>
-                <thead>
-                    <tr>
-                        <th class="text-left">
-                            Reference
-                        </th>
-                        <th class="text-left">
-                            Display
-                        </th>
-                        <th class="text-left">
-                            Tickets
-                        </th>
-                        <th class="text-left">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in dt_draw_participants" :key="item.name">
-                        <td>{{ item.reference }}</td>
-                        <td>{{ item.display_name }}</td>
-                        <td>{{ item.tickets }}</td>
-                        <td>
-                            <a @click.prevent="editEntry(item)" href="#">Edit</a>
-                            <v-btn icon @click="deleteEntry(item)" color="error">
-                                <v-icon>
-                                    mdi-delete
-                                </v-icon>
-                            </v-btn>
-                        </td>
-                    </tr>
-                </tbody>
-            </template>
-        </v-simple-table>
-        <v-bottom-sheet v-model="sheet">
-            <v-list>
-                <v-subheader>Open in</v-subheader>
-                <v-list-item v-for="tile in tiles" :key="tile.title" @click="sheet = false">
-                    <v-list-item-avatar>
-                        <v-avatar size="32px" tile>
-                            <img :src="`https://cdn.vuetifyjs.com/images/bottom-sheets/${tile.img}`" :alt="tile.title">
-                        </v-avatar>
-                    </v-list-item-avatar>
-                    <v-list-item-title>{{ tile.title }}</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-bottom-sheet>
-        <ParticipantsMaint ref="participantsMaint" />
-        <YesNoModal ref="YesNoModal" />
-    </v-container>
+    <div>
+        <v-container fluid v-if="dt_draw != null">
+            <h2 class="mt-2">{{ dt_draw.draw_name }}</h2>
+            <div class="mt-1">{{ dt_draw.total_tickets }} tickets {{dt_draw_participants.length}} persons</div>
+            <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
+            <v-btn class="my-3" large block color="primary" @click="editDraw" v-if="userAccess.role_id!=9">Edit Draw
+            </v-btn>
+            <v-btn class="my-3" large block color="primary" @click="addEntry">Add Entry</v-btn>
+            <v-text-field append-icon="mdi-magnify" placeholder="Search..." dense hide-details outlined class="mb-3">
+            </v-text-field>
+            <v-simple-table dense fixed-header height="calc(100vh - 240px)">
+                <template v-slot:default>
+                    <thead>
+                        <tr>
+                            <th class="text-left">
+                                Reference
+                            </th>
+                            <th class="text-left">
+                                Display
+                            </th>
+                            <th class="text-left">
+                                Tickets
+                            </th>
+                            <th class="text-left">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in dt_draw_participants" :key="item.name">
+                            <td>{{ item.reference }}</td>
+                            <td>{{ item.display_name }}</td>
+                            <td>{{ item.tickets }}</td>
+                            <td>
+                                <a @click.prevent="editEntry(item)" href="#">Edit</a>
+                                <v-btn icon @click="deleteEntry(item)" color="error">
+                                    <v-icon>
+                                        mdi-delete
+                                    </v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+            <v-bottom-sheet v-model="sheet">
+                <v-list>
+                    <v-subheader>Open in</v-subheader>
+                    <v-list-item v-for="tile in tiles" :key="tile.title" @click="sheet = false">
+                        <v-list-item-avatar>
+                            <v-avatar size="32px" tile>
+                                <img :src="`https://cdn.vuetifyjs.com/images/bottom-sheets/${tile.img}`"
+                                    :alt="tile.title">
+                            </v-avatar>
+                        </v-list-item-avatar>
+                        <v-list-item-title>{{ tile.title }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-bottom-sheet>
+            <ParticipantsMaint ref="participantsMaint" />
+            <YesNoModal ref="YesNoModal" />
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -71,7 +75,7 @@
         },
         data() {
             return {
-                userAccess:null,
+                userAccess: null,
                 dt_draw: null,
                 dt_draw_participants: null,
                 sheet: false,
@@ -110,7 +114,7 @@
             self.getUserAccess()
         },
         methods: {
-             getUserAccess() {
+            getUserAccess() {
                 let self = this
                 console.log(localStorage.getItem("userDetails"));
 

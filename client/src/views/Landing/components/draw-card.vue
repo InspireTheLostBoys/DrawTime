@@ -16,10 +16,10 @@
                         </div>
                     </td>
                     <td style="text-align: right;">
-                        <div>239 tickets</div>
+                        <div>{{draw.total_tickets}} tickets</div>
                         <div>Tickets cost: R{{ draw.ticket_cost }}</div>
                         <div>
-                            <b>Pot: R896</b>
+                            <b>Pot: {{draw.total_pot}}</b>
                         </div>
                     </td>
                 </tr>
