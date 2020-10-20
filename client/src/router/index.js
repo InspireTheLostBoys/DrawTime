@@ -11,6 +11,10 @@ import DrawsCreate from '../views/Draws/Create.vue'
 import DrawsEdit from '../views/Draws/Edit.vue'
 import DrawStart from '../views/Draws/StartDraw.vue'
 
+import History from '../views/History/Index.vue'
+import HistoryItems from '../views/History/HistoryItems.vue'
+
+
 
 // Participants
 import Participants from '../views/Participants/Index.vue'
@@ -37,6 +41,16 @@ const routes = [
     name: 'main',
     component: Main,
     children: [
+      {
+        path: '/History/:draw_id',
+        name: 'HistoryItems',
+        component: HistoryItems,
+      },
+      {
+        path: '/History',
+        name: 'History',
+        component: History,
+      },
       {
         path: '/Landing',
         name: 'landing',

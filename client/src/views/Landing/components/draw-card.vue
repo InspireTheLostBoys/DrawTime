@@ -5,12 +5,12 @@
                 <tr>
                     <td>
                         <h3>{{ draw.draw_name }}</h3>
-                        <div>Wed 20 Aug 2020 19:00</div>
+                        <div>{{FormatDateTime(draw.draw_time)}}</div>
                         <div>
-                            <v-chip label x-small color="primary">
+                            <v-chip v-if="checkDrawDate(draw.issue_close)" label x-small color="primary">
                                 Issue Closed
                             </v-chip>
-                            <v-chip class="ml-1" label x-small color="primary">
+                            <v-chip v-if="!checkDrawDate(draw.draw_time)" class="ml-1" label x-small color="primary">
                                 Draw Ready
                             </v-chip>
                         </div>
@@ -29,7 +29,20 @@
 </template>
 
 <script>
-export default {
-    props: ['draw',"canPlay"]
-}
+    export default {
+        props: ['draw', "canPlay"],
+        methods: {
+            checkDrawDate(date) {
+                let self = this
+                let todayDate = new Date()
+                console.log(self.FormatDateTime(todayDate));
+                
+                if (self.FormatDateTime(date) > self.FormatDateTime(todayDate)) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
+    }
 </script>

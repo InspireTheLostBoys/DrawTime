@@ -19,10 +19,10 @@
                         </v-col>
                         <v-col cols="6" style="text-align: right;">
                             <div style="height: 30px"></div>
-                            <h1>DUE: R0</h1>
+                            <h1>DUE: R{{getTotalDue}}</h1>
                         </v-col>
                         <v-col cols="1" style="text-align: left;" v-if="isAdd">
-                            <v-checkbox class="ma-0 mt-0" v-model="accepts"  >
+                            <v-checkbox class="ma-0 mt-0" v-model="accepts">
                             </v-checkbox>
                         </v-col>
                         <v-col cols="11">
@@ -56,18 +56,28 @@
                 participant: null,
                 afterReturn: null,
                 accepts: false,
-                isAdd: true
+                isAdd: true,
+                ticket_cost:null
+            }
+        },
+        computed: {
+            getTotalDue() {
+                let self = this
+                if (self.participant != null) {
+                    return self.participant.tickets * self.ticket_cost
+                }
             }
         },
         methods: {
             openTerms() {
                 let self = this
-                console.log("yeet");
                 self.$refs.termsModal.open()
 
             },
-            show(participant, isAdd, afterReturn) {
+            show(participant,dt_draw, isAdd, afterReturn) {
                 let self = this;
+                console.log(dt_draw);
+                self.ticket_cost = dt_draw.ticket_cost
                 self.participant = participant;
                 self.isAdd = isAdd;
                 self.afterReturn = afterReturn;

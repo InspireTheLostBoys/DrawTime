@@ -2,13 +2,14 @@
     <div>
         <v-container fluid v-if="dt_draw != null">
             <h2 class="mt-2">{{ dt_draw.draw_name }}</h2>
-            <div class="mt-1">{{ dt_draw.total_tickets }} tickets {{dt_draw_participants.length}} persons</div>
+            <div class="mt-1" v-if="dt_draw_participants!=null">{{ dt_draw.total_tickets }} tickets {{dt_draw_participants.length}} persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
             <v-btn class="my-3" large block color="primary" @click="editDraw" v-if="userAccess.role_id!=9">Edit Draw
             </v-btn>
             <v-btn class="my-3" large block color="primary" @click="addEntry">Add Entry</v-btn>
             <v-text-field append-icon="mdi-magnify" placeholder="Search..." dense hide-details outlined class="mb-3">
             </v-text-field>
+            <DuplicateDraw :draw="dt_draw" />
             <v-simple-table dense fixed-header height="calc(100vh - 240px)">
                 <template v-slot:default>
                     <thead>
@@ -66,12 +67,14 @@
 
 <script>
     import ParticipantsMaint from './components/participant-maint-modal.vue'
+    import DuplicateDraw from  '@/components/Common/DuplicateDraw.vue'
     import YesNoModal from '@/components/YesNoModal.vue'
 
     export default {
         components: {
             ParticipantsMaint,
-            YesNoModal
+            YesNoModal,
+            DuplicateDraw
         },
         data() {
             return {
@@ -171,7 +174,7 @@
                     issued_by: 1,
                 }
 
-                self.$refs.participantsMaint.show(blankParticipant, true, participant => {
+                self.$refs.participantsMaint.show(blankParticipant,self.dt_draw, true, participant => {
                     self.post('dt_draw_participant', participant)
                         .then(r => {
                             self.dt_draw_participants.push(r.data.dt_draw_participant);
@@ -181,7 +184,7 @@
             editEntry(entry) {
                 let self = this;
 
-                self.$refs.participantsMaint.show(entry, false, participant => {
+                self.$refs.participantsMaint.show(entry,self.dt_draw, false, participant => {
                     self.put('dt_draw_participant', participant)
                         .then(r => {
                             for (var prop in entry) {

@@ -2,8 +2,11 @@
     <div>
         <v-dialog v-model="dialog" width="400">
             <v-card>
-                <v-card-title class="headline pink lighten-2" style="color: white; background: #fa41cc!important;" primary-title>Error</v-card-title>
-
+                <v-toolbar class="headline" color="error" dark primary-title>
+                    <v-toolbar-title>
+                        Error
+                    </v-toolbar-title>
+                </v-toolbar>
                 <v-card-text class="mt-4">
                     <div class="font-weight-bold" style="font-size: 18px!important;">{{ text }}</div>
                 </v-card-text>
