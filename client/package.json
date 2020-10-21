@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.20.0",
+    "chokidar": "^3.4.3",
     "luxon": "^1.25.0",
     "moment": "^2.29.1",
     "register-service-worker": "^1.7.1",
