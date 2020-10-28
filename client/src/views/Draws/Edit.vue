@@ -1,6 +1,6 @@
 <template>
     <div>
-         
+
         <v-container fluid class="fill-height" v-if="draw != null">
             <v-row no-gutters>
                 <v-col cols="12">
@@ -36,7 +36,7 @@
             </v-row>
             <v-row>
                 <v-col cols="12">
-                    <v-btn @click="updateDraw" block color="primary" large>Update Draw</v-btn>
+                    <v-btn @click="validate" block color="primary" large>Update Draw</v-btn>
                 </v-col>
                 <!-- <v-col cols="12" class="pt-0">
                     <v-btn block color="primary" large>
@@ -57,6 +57,7 @@
         <Participants ref="participantsModal" />
         <prizeModal ref="prizeModal" />
         <YesNoModal ref="YesNoModal" />
+        <ErrorDialog ref="ErrorDialog" />
     </div>
 </template>
 
@@ -99,6 +100,18 @@
             self.getDraw();
         },
         methods: {
+            validate() {
+                let self = this
+                let valid = true
+                if (self.draw.draw_name == "" || self.draw.issue_open == "" || self.draw.issue_close == "" || self.draw
+                    .draw_time == "" || (self
+                        .draw.entry_fee == true && self.draw.ticket_cost > 0)) {
+                    self.$refs.ErrorDialog.show("Please ensure all draw details are filled in",
+                        val => {})
+                } else {
+                    self.updateDraw()
+                }
+            },
             cancelDraw() {
                 let self = this
                 self.$refs.YesNoModal.show("error", "Cancel Draw", "Are you sure you wish to cancel this draw?",

@@ -1,15 +1,29 @@
-FROM node:12.2.0-alpine
-
-# set working directory
+#build vue project
+FROM node:12.18.1-alpine AS build
 WORKDIR /app
+copy package.json ./
+run npm install
+copy . .
+run npm run build
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+#create nginx srever
+from nginx:1.19.0-alpine as prod-stage
+copy --from=build /app/dist /usr/share/nginx/html
+expose 80
+cmd ["nginx","-g","daemon off;"]
 
-# install and cache app dependencies
-COPY package.json /app/package.json
-RUN npm install
-RUN npm install @vue/cli@3.7.0 -g
 
-# start app
-CMD ["npm", "run", "serve"]
+
+#
+# Dockerfile
+#
+# FROM alpine AS builder 
+# RUN apk add build-base 
+# WORKDIR /home
+# COPY hello.c .
+# RUN gcc "-DARCH=\"`uname -a`\"" hello.c -o hello
+ 
+# FROM alpine 
+# WORKDIR /home
+# COPY --from=builder /home/hello .
+# ENTRYPOINT ["./hello"] 

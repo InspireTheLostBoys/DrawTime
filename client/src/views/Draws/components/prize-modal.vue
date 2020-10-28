@@ -8,7 +8,7 @@
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        <v-btn dark text @click="submit()">
+                        <v-btn dark text @click="validate()">
                             Save
                         </v-btn>
                     </v-toolbar-items>
@@ -39,6 +39,7 @@
                     </v-row>
                 </v-container>
             </v-card>
+            <ErrorDialog ref="ErrorDialog" />
         </v-dialog>
     </v-row>
 </template>
@@ -65,10 +66,10 @@
         methods: {
             changeType(type) {
                 let self = this
-                if (type==0) {
+                if (type == 0) {
                     self.prize.percentage_of_pot = !self.prize.show_value
                     self.prize.pot_percentage = 0
-                }else{
+                } else {
                     self.prize.show_value = !self.prize.percentage_of_pot
                     self.prize.prize_value = 0
                 }
@@ -80,6 +81,16 @@
                 }
                 self.callback = callback
                 self.dialog = true;
+            },
+            validate() {
+                let self = this
+                if ((self.prize.percentage_of_pot && self.prize.pot_percentage <= 0) || (self.prize.show_value && self
+                        .prize.prize_value <= 0)) {
+                    self.$refs.ErrorDialog.show("Please ensure all prize information is filled in",
+                        afterReturn => {})
+                } else {
+                    self.submit()
+                }
             },
             submit() {
                 let self = this;

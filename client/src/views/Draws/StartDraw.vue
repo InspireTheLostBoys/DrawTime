@@ -6,6 +6,7 @@
                 {{dt_draw_participants.length}}
                 persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
+            <v-btn block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
             <v-btn class="my-3" v-if="allDrawn && !dt_draw.completed" large block color="success"
                 @click="completeDraw(true)">
                 mark draw as complete
@@ -27,8 +28,7 @@
                 </div>
 
                 <!-- completed card -->
-                <v-card class="ma-5" v-else block color="grey lighten-1" justify-center align-center
-                    >
+                <v-card class="ma-5" v-else block color="grey lighten-1" justify-center align-center>
                     <v-container no-gutters justify-center align-center>
                         <v-row no-gutters>
                             <v-col v-if="prize.show_value" cols="12" no-gutters style="text-align: center;">
@@ -75,6 +75,20 @@
             self.initWebsocket()
         },
         methods: {
+            cancelDraw() {
+                let self = this
+                self.$refs.YesNoModal.show("error", "Cancel Draw", "Are you sure you wish to cancel this draw?",
+                    value => {
+                        if (value) {
+                            self.dt_draw.cancelled = true
+                            self.put('dt_draw', self.dt_draw)
+                                .then(r => {
+                                    self.$router.push('/Landing')
+                                })
+                        }
+                    })
+
+            },
             completeDraw(completed) {
                 let self = this
                 self.dt_draw.completed = completed

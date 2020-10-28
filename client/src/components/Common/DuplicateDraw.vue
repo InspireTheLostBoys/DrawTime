@@ -1,8 +1,7 @@
 <template>
-    <div>
         <v-dialog v-model="dialog">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                <v-btn block color="primary" dark v-bind="attrs" v-on="on">
                    duplicate draw
                 </v-btn>
             </template>
@@ -23,7 +22,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </div>
 </template>
 <script>
     export default {

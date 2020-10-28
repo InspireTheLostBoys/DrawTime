@@ -39,16 +39,19 @@
 
 
         </v-dialog>
+        <ErrorDialog ref="ErrorDialog" />
         <termsModal ref="termsModal" />
     </v-row>
 </template>
 
 <script>
+    import ErrorDialog from '@/components/Common/Overlays/Dialogs/Error.vue'
     import termsModal from "./terms-modal.vue"
 
     export default {
         components: {
-            termsModal
+            termsModal,
+            ErrorDialog
         },
         data() {
             return {
@@ -57,7 +60,7 @@
                 afterReturn: null,
                 accepts: false,
                 isAdd: true,
-                ticket_cost:null
+                ticket_cost: null
             }
         },
         computed: {
@@ -74,19 +77,44 @@
                 self.$refs.termsModal.open()
 
             },
-            show(participant,dt_draw, isAdd, afterReturn) {
+            show(participant, dt_draw, isAdd, afterReturn) {
                 let self = this;
                 console.log(dt_draw);
                 self.ticket_cost = dt_draw.ticket_cost
                 self.participant = participant;
+                if (self.participant.tickets == null) {
+                    self.participant.tickets = 1
+                }
                 self.isAdd = isAdd;
                 self.afterReturn = afterReturn;
                 self.dialog = true;
             },
             returnParticipant() {
                 let self = this;
-                self.afterReturn(self.participant);
-                self.dialog = false;
+                self.validate(val => {
+                    console.log("[VALIDATE]", val);
+
+                    if (val) {
+                        // self.afterReturn(self.participant);
+                        self.dialog = false;
+                    } else {
+                        self.$refs.ErrorDialog.show("Please ensure all participant details are filled in",
+                            val => {})
+                    }
+
+                })
+
+            },
+            validate(callback) {
+                let self = this
+                let valid = true
+                console.log("[PARTICIPANTS]", self.participant);
+                if ((self.participant.reference == "" || self.participant.reference == null || self.participant
+                        .display_name == "" || self.participant.display_name == null) || self.participant.tickets < 1 ||self.participant.tickets == "") {
+                    
+                    valid = false
+                }
+                callback(valid)
             },
             onFieldChange() {
                 let self = this;

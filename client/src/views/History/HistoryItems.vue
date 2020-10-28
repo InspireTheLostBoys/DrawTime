@@ -13,6 +13,9 @@
             <v-btn class="my-3" v-if="dt_draw.cancelled " large block color="warning" @click="unCancelDraw(false)">
                 Mark draw as not cancelled
             </v-btn>
+            <v-btn class="my-3"  large block color="error" @click="deleteFromHistory()">
+                Delete from history
+            </v-btn>
             <div v-if="dt_draw!=null && dt_draw_participants!=null" v-for="(prize,idx) in dt_draw.prizes" :key="idx">
 
                 <v-card class="ma-5" block color="grey lighten-1" justify-center align-center>
@@ -60,6 +63,17 @@
             self.getDrawDetails();
         },
         methods: {
+            deleteFromHistory(){
+                let self = this
+                self.$refs.YesNoModal.show("error", "Delete Draw", "Are you sure you wish to permanently delete this draw?",val=>{
+                    if(val){
+                        self.delete(`dt_draw?draw_id=${self.dt_draw.id}`).then(r=>{
+                            // self.$router.push("/History")
+                            self.$router.back() 
+                        })
+                    }
+                })
+            },
             unCancelDraw(val) {
                 let self = this
                 self.dt_draw.cancelled = val

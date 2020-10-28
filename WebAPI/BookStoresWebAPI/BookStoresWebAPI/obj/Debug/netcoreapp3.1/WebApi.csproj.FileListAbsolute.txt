@@ -325,10 +325,6 @@ C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\bin\Debug\netcorea
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.csprojAssemblyReference.cache
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.AssemblyInfoInputs.cache
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.AssemblyInfo.cs
-C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.csproj.CoreCompileInputs.cache
-C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.MvcApplicationPartsAssemblyInfo.cs
-C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.MvcApplicationPartsAssemblyInfo.cache
-C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\EFCorePluralizer.cs
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.RazorTargetAssemblyInfo.cache
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.csproj.CopyComplete
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\staticwebassets\WebApi.StaticWebAssets.Manifest.cache
@@ -336,3 +332,7 @@ C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcorea
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.dll
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.pdb
 C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.genruntimeconfig.cache
+C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.csproj.CoreCompileInputs.cache
+C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\WebApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Work\Git\DrawTime\WebAPI\BookStoresWebAPI\BookStoresWebAPI\obj\Debug\netcoreapp3.1\EFCorePluralizer.cs

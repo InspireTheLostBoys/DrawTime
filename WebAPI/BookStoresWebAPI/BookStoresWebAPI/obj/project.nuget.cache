@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4mw+RWxrr1A46dP21Org63gu91a41lZb4tSUv4MfVrOBPiwXa0RqwtI3FmVxbfyYYykWe5xZmiGRAb+ECSjwdg==",
+  "dgSpecHash": "+dqgISh1naQyihHkPV9dDYHkbq3EiE0TZdfjO9BrN7X3+oXG5U76ndFCq9Gyq4XcMpkFh0mphhd5szDcPE80EQ==",
   "success": true,
   "projectFilePath": "C:\\Work\\Git\\DrawTime\\WebAPI\\BookStoresWebAPI\\BookStoresWebAPI\\WebApi.csproj",
   "expectedPackageFiles": [
@@ -57,6 +57,7 @@
     "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.2\\microsoft.netcore.platforms.2.1.2.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.openapi\\1.1.4\\microsoft.openapi.1.1.4.nupkg.sha512",
+    "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.10.9\\microsoft.visualstudio.azure.containers.tools.targets.1.10.9.nupkg.sha512",
     "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration\\3.1.4\\microsoft.visualstudio.web.codegeneration.3.1.4.nupkg.sha512",
     "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.contracts\\3.1.4\\microsoft.visualstudio.web.codegeneration.contracts.3.1.4.nupkg.sha512",
     "C:\\Users\\Brandons-pc\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration.core\\3.1.4\\microsoft.visualstudio.web.codegeneration.core.3.1.4.nupkg.sha512",

@@ -1,6 +1,6 @@
 <template>
     <div>
-         
+
         <v-container fluid class="fill-height">
             <v-row no-gutters>
                 <v-col cols="12">
@@ -13,15 +13,15 @@
                 </v-col>
                 <v-col cols="12">
                     <label>Issue open</label>
-                    <datetime type="datetime" v-model="issueOpen" class="input"></datetime>
+                    <datetime type="datetime" :max-datetime="issueClose" v-model="issueOpen" class="input"></datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Issue close</label>
-                    <datetime type="datetime" v-model="issueClose" class="input"></datetime>
+                    <datetime type="datetime" :min-datetime="issueOpen" v-model="issueClose" class="input"></datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Draw time</label>
-                    <datetime type="datetime" v-model="drawTime" class="input"></datetime>
+                    <datetime type="datetime" v-model="drawTime" :min-datetime="issueClose" class="input"></datetime>
                 </v-col>
                 <v-col cols="12" v-if="drawType == 2">
                     <label>Ticket cost</label>
@@ -46,11 +46,12 @@
                     </v-btn>
                 </v-col> -->
                 <v-col cols="12" class="pt-0">
-                    <v-btn @click="createDraw" block color="success" large>Create Draw</v-btn>
+                    <v-btn @click="validate" block color="success" large>Create Draw</v-btn>
                 </v-col>
             </v-row>
         </v-container>
         <Participants ref="participantsModal" />
+        <ErrorDialog ref="ErrorDialog" />
     </div>
 </template>
 
@@ -90,6 +91,17 @@
             }
         },
         methods: {
+            validate() {
+                let self = this
+                let valid = true
+                if (self.drawName == "" || self.issueOpen == "" || self.issueClose == "" || self.drawTime == "" || (self
+                        .entryFee == true && self.ticketCost > 0)) {
+                    self.$refs.ErrorDialog.show("Please ensure all draw details are filled in",
+                        val => {})
+                } else {
+                    self.createDraw()
+                }
+            },
             createDraw() {
                 let self = this;
 

@@ -5,6 +5,7 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import CommonFunctions from './libs/common-functions.js';
+import ErrorDialog from '@/components/Common/Overlays/Dialogs/Error.vue'
 
 import 'vue-datetime/dist/vue-datetime.css'
 
@@ -12,6 +13,9 @@ import 'vue-datetime/dist/vue-datetime.css'
 import ServiceCaller from './libs/service-caller.js';
 Vue.use(ServiceCaller);
 Vue.use(CommonFunctions)
+Vue.use(ErrorDialog)
+Vue.component('ErrorDialog', ErrorDialog)
+
 Vue.config.productionTip = false
 
 new Vue({
