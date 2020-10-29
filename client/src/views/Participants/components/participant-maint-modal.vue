@@ -80,6 +80,7 @@
             show(participant, dt_draw, isAdd, afterReturn) {
                 let self = this;
                 console.log(dt_draw);
+                self.accepts=false
                 self.ticket_cost = dt_draw.ticket_cost
                 self.participant = participant;
                 if (self.participant.tickets == null) {
@@ -95,11 +96,11 @@
                     console.log("[VALIDATE]", val);
 
                     if (val) {
-                        // self.afterReturn(self.participant);
+                        self.afterReturn(self.participant);
                         self.dialog = false;
                     } else {
                         self.$refs.ErrorDialog.show("Please ensure all participant details are filled in",
-                            val => {})
+                            value => {})
                     }
 
                 })

@@ -6,11 +6,14 @@
                 {{dt_draw_participants.length}}
                 persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
-            <v-btn block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
+            <DuplicateDraw ref="DuplicateDraw" :draw="dt_draw" />
+            <v-btn class="mt-3" v-if="!anyDrawn" block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
+            <v-btn class="mt-3" v-if="!anyDrawn" large color="warning" @click="$router.push('/Participants/' + dt_draw.id)" block>edit</v-btn>
             <v-btn class="my-3" v-if="allDrawn && !dt_draw.completed" large block color="success"
                 @click="completeDraw(true)">
                 mark draw as complete
             </v-btn>
+            
             <v-btn class="my-3" v-if="dt_draw.completed" large block color="warning" @click="completeDraw(false)">
                 mark draw as incomplete
             </v-btn>
@@ -99,9 +102,12 @@
             checkAllPrizes() {
                 let self = this
                 self.allDrawn = true
+                self.anyDrawn = false
                 self.dt_draw.prizes.forEach(prize => {
                     if (prize.winner_id == 0) {
                         self.allDrawn = false
+                    }else{
+                        self.anyDrawn = true
                     }
                 })
             },

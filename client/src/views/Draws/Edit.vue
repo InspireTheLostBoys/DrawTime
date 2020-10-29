@@ -13,15 +13,15 @@
                 </v-col>
                 <v-col cols="12">
                     <label>Issue open</label>
-                    <datetime type="datetime" v-model="draw.issue_open" class="input"></datetime>
+                    <datetime type="datetime" :max-datetime="draw.issue_close" v-model="draw.issue_open" class="input"></datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Issue close</label>
-                    <datetime type="datetime" v-model="draw.issue_close" class="input"></datetime>
+                    <datetime type="datetime" :min-datetime="draw.issue_open" v-model="draw.issue_close" class="input"></datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Draw time</label>
-                    <datetime type="datetime" v-model="draw.draw_time" class="input"></datetime>
+                    <datetime type="datetime" :min-datetime="draw.issue_close" v-model="draw.draw_time" class="input"></datetime>
                 </v-col>
                 <v-col cols="12" v-if="draw.draw_type == 2">
                     <label>Ticket cost</label>
@@ -178,7 +178,9 @@
                 let self = this;
                 self.put('dt_draw', self.draw)
                     .then(r => {
-                        self.$router.push('/Landing')
+                        console.log("update draw",r);
+                        self.$router.back();
+                        // self.$router.push('/Participants/'+r.data.dt_draw.id)
                     })
             }
         }

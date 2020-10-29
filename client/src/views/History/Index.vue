@@ -4,7 +4,7 @@
             <v-col cols="12" v-if="draws.length==0">
                 <v-card>
                     <v-card-text>
-                        There are currently no completed draws 
+                        There are currently no completed draws
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -17,8 +17,14 @@
                                     <h3>{{ draw.draw_name }}</h3>
                                     <div>{{FormatDateTime(draw.draw_time)}}</div>
                                     <div>
-                                        <v-chip label x-small color="primary">
+                                        <!-- <v-chip label x-small color="primary">
                                             Issue Closed
+                                        </v-chip> -->
+                                        <v-chip v-if="draw.completed" label x-small color="success">
+                                            Completed
+                                        </v-chip>
+                                        <v-chip v-if="draw.cancelled" label x-small color="error">
+                                            Cancelled
                                         </v-chip>
                                         <!-- <v-chip class="ml-1" label x-small color="primary">
                                             Draw Ready
@@ -45,7 +51,7 @@
         data() {
             return {
                 draws: [],
-                userAccess:null,
+                userAccess: null,
             }
         },
         mounted() {
@@ -53,7 +59,7 @@
             this.getUserAccess()
         },
         methods: {
-             canPlay(draw) {
+            canPlay(draw) {
                 let self = this
                 self.get(`dt_draw/CanPlay?draw_id=${draw.id}`).then(r => {
                     if (r.data) {
@@ -65,17 +71,20 @@
                     }
                 })
             },
-             getUserAccess() {
+            getUserAccess() {
                 let self = this
                 console.log(localStorage.getItem("userDetails"));
 
                 self.userAccess = JSON.parse(localStorage.getItem("userDetails"));
             },
-            routeToHistory(draw){
+            routeToHistory(draw) {
                 let self = this
-                 self.$router.push('/History/' + draw.id)
+                if (self.userAccess.role_id != 9) {
+                    self.$router.push('/History/' + draw.id)
+                }
                 // 
             },
+
             getDraws() {
                 let self = this;
 

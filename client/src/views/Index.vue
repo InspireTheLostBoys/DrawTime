@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-toolbar color="primary" dense dark>
-            <v-toolbar-title v-if="config!=null">
+            <v-toolbar-title v-if="config!=null" @click="routelanding">
                 Draw Time - {{config.venue_name}}
             </v-toolbar-title>
             <v-spacer></v-spacer>
@@ -16,15 +16,14 @@
         <router-link to="/CreateDraw">Create Draw</router-link>
         |
         <router-link to="/Participants">Participants</router-link> -->
-        
+
         <router-view />
     </div>
 </template>
 <script>
-
     export default {
         components: {
-           
+
         },
         data() {
             return {
@@ -32,6 +31,12 @@
             }
         },
         methods: {
+            routelanding() {
+                let self = this
+                if (self.$route.path != "/Landing")
+                    self.$router.push('/Landing')
+
+            },
             getSystemConfig() {
                 let self = this;
                 self.get('dt_config')

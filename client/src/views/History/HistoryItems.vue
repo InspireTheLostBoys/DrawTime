@@ -6,6 +6,7 @@
                 {{dt_draw_participants.length}}
                 persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
+            <DuplicateDraw ref="DuplicateDraw" :draw="dt_draw" />
             <v-btn class="my-3" v-if="!dt_draw.cancelled && dt_draw.completed" large block color="warning"
                 @click="completeDraw(false)">
                 mark draw as incomplete
@@ -27,7 +28,6 @@
                             <v-col v-if="prize.percentage_of_pot" cols="12" no-gutters style="text-align: center;">
                                 Prize DRAWN : {{prize.description}} - {{prize.pot_percentage}}% of Pot
                             </v-col>
-
                             <v-col cols="12" style="text-align: center;">
                                 Winner : {{GetDrawWinner(prize)}}
                             </v-col>
