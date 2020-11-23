@@ -24,14 +24,16 @@ import Settings from '../views/Settings/Index.vue'
 import SystemUsers from '../views/Settings/SystemUsers/Index.vue'
 import CreateSystemUsers from '../views/Settings/SystemUsers/Create.vue'
 import EditSystemUsers from '../views/Settings/SystemUsers/Edit.vue'
+import Adverts from "../views/Ads/Index.vue"
+
+
 
 // Login
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/Login',
     name: 'login',
     component: Login,
@@ -40,7 +42,11 @@ const routes = [
     path: '/',
     name: 'main',
     component: Main,
-    children: [
+    children: [{
+        path: '/Adverts',
+        name: 'Adverts',
+        component: Adverts,
+      },
       {
         path: '/History/:draw_id',
         name: 'HistoryItems',
@@ -56,7 +62,7 @@ const routes = [
         name: 'landing',
         component: Landing,
       },
-        {
+      {
         path: '/DrawStart/:draw_id',
         name: 'draw-start',
         component: DrawStart,

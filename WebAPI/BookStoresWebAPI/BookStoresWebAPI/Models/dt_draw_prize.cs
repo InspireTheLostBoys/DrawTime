@@ -20,6 +20,8 @@ namespace WebAPI.Models
         public decimal pot_percentage { get; set; }
         public decimal prize_value { get; set; }
         public int winner_id { get; set; }
+        public string prize_image { get; set; }
+
 
 
     }

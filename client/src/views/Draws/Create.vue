@@ -118,7 +118,7 @@
                 self.post('dt_draw', request)
                     .then(r => {
                         console.log("create DRAW",r);
-                        self.$router.push('/Participants/'+r.data.dt_draw.id)
+                        self.$router.push('/EditDraw/'+r.data.dt_draw.id)
                     })
                     .catch(e => {
                         alert("Failed to create draw");

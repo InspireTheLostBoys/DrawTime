@@ -6,47 +6,112 @@
                 {{dt_draw_participants.length}}
                 persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
-            <DuplicateDraw ref="DuplicateDraw" :draw="dt_draw" />
-            <v-btn class="mt-3" v-if="!anyDrawn" block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
-            <v-btn class="mt-3" v-if="!anyDrawn" large color="warning" @click="$router.push('/Participants/' + dt_draw.id)" block>edit</v-btn>
-            <v-btn class="my-3" v-if="allDrawn && !dt_draw.completed" large block color="success"
-                @click="completeDraw(true)">
-                mark draw as complete
-            </v-btn>
-            
-            <v-btn class="my-3" v-if="dt_draw.completed" large block color="warning" @click="completeDraw(false)">
-                mark draw as incomplete
-            </v-btn>
+            <v-row no-gutters>
+                <v-col cols="6" class="pa-1">
+                    <DuplicateDraw ref="DuplicateDraw" :draw="dt_draw" />
+                </v-col>
+                <v-col v-if="!anyDrawn" cols="6" class="pa-1">
+                    <v-btn block color="error" large @click="cancelDraw">Cancel Draw
+                    </v-btn>
+                </v-col>
+                <v-col v-if="!anyDrawn" cols="6" class="pa-1">
+                    <v-btn large color="warning" @click="$router.push('/Participants/' + dt_draw.id)" block>edit</v-btn>
+                </v-col>
+
+                <v-col v-if="!drawStarted" cols="6" class="pa-1">
+                    <v-btn large block color="success" @click="sendDrawControl('SHOW',true)">
+                        show draw
+                    </v-btn>
+                </v-col>
+                <v-col v-if="drawStarted" cols="6" class="pa-1">
+                    <v-btn large block color="success" @click="sendDrawControl('HIDE',false)">
+                        Hide draw
+                    </v-btn>
+                </v-col>
+                <v-col v-if="drawStarted" cols="6" class="pa-1">
+                    <v-btn large block color="warning" @click="sendDrawControl('RESET',true)">
+                        reset display
+                    </v-btn>
+                </v-col>
+                <v-col v-if="allDrawn && !dt_draw.completed" cols="12" class="pa-1">
+                    <v-btn large block color="success" @click="completeDraw(true)">
+                        mark draw as complete
+                    </v-btn>
+                </v-col>
+                <v-col v-if="dt_draw.completed" cols="12" class="pa-1">
+                    <v-btn large block color="warning" @click="completeDraw(false)">
+                        mark draw as incomplete
+                    </v-btn>
+                </v-col>
+            </v-row>
+
             <div v-if="dt_draw!=null" v-for="(prize,idx) in dt_draw.prizes" :key="idx">
+                <v-card @click="drawPrize(prize)" v-if="prize.winner_id==0" class="ma-2" color="primary" dark>
+                    <div class="d-flex flex-no-wrap justify-space-between">
+                        <div>
+                            <v-card-title class="headline"> Draw
+                                for:</v-card-title>
+                            <v-card-subtitle  v-if="prize.show_value" cols="12" no-gutters>
 
-                <!-- draw prizes -->
-                <div v-if="prize.winner_id==0">
-                    <v-btn v-if="prize.show_value" class="my-3" large block color="primary" @click="drawPrize(prize)">
-                        Draw
-                        for
-                        {{prize.description}} - R{{prize.prize_value}} </v-btn>
-                    <v-btn v-if="prize.percentage_of_pot" class="my-3" large block color="primary"
-                        @click="drawPrize(prize)">Draw for
-                        {{prize.description}} - {{prize.pot_percentage}}% of Pot </v-btn>
-                </div>
+                                {{prize.description}} - R{{prize.prize_value}}
+                            </v-card-subtitle>
+                            <v-card-subtitle  v-if="prize.percentage_of_pot" cols="12" no-gutters>
 
-                <!-- completed card -->
-                <v-card class="ma-5" v-else block color="grey lighten-1" justify-center align-center>
-                    <v-container no-gutters justify-center align-center>
-                        <v-row no-gutters>
-                            <v-col v-if="prize.show_value" cols="12" no-gutters style="text-align: center;">
-                                Prize DRAWN : {{prize.description}} - R{{prize.prize_value}}
-                            </v-col>
-                            <v-col v-if="prize.percentage_of_pot" cols="12" no-gutters style="text-align: center;">
-                                Prize DRAWN : {{prize.description}} - {{prize.pot_percentage}}% of Pot
-                            </v-col>
+                                {{prize.description}} - {{prize.pot_percentage}}% of Pot
+                            </v-card-subtitle>
+                        </div>
+                        <v-avatar class="ma-3" size="125" tile>
+                            <object height="100" width="100%" :data="getImg(prize)" type="image/png">
+                                <img height="100%" src="img/no-image.png" style="width:100% !important">
+                            </object>
+                        </v-avatar>
+                    </div>
+                </v-card>
 
-                            <v-col v-if="dt_draw_participants!=null" cols="12" style="text-align: center;">
+                <v-card class="ma-2" v-else block color="grey lighten-1" justify-center align-center>
+                    <div class="d-flex flex-no-wrap justify-space-between">
+                        <div>
+                             <v-card-title class="headline"> Prize DRAWN :</v-card-title>
+                            <v-card-subtitle v-if="prize.show_value" cols="12" no-gutters >
+                                {{prize.description}} - R{{prize.prize_value}}
+                            </v-card-subtitle>
+                            <v-card-subtitle v-if="prize.percentage_of_pot" cols="12" no-gutters >
+                                 {{prize.description}} - {{prize.pot_percentage}}% of Pot
+                            </v-card-subtitle>
+
+                            <v-col v-if="dt_draw_participants!=null" cols="12" >
                                 Winner : {{GetDrawWinner(prize)}}
                             </v-col>
-                        </v-row>
-                    </v-container>
+                        </div>
+                        <v-avatar class="ma-3" size="125" tile>
+                            <object height="100" width="100%" :data="getImg(prize)" type="image/png">
+                                <img height="100%" src="img/no-image.png" style="width:100% !important">
+                            </object>
+                        </v-avatar>
+                    </div>
                 </v-card>
+                <!-- draw prizes -->
+                <!-- <div v-if="prize.winner_id==0">
+                    <v-row no-gutters>
+                        <v-col no-gutters cols="3">
+                            <v-card class="my-3" height="100" width="100%">
+                                <object height="100" width="100%" :data="getImg(prize)" type="image/png">
+                                    <img height="100%" src="img/no-image.png" style="width:100% !important">
+                                </object>
+                            </v-card>
+                        </v-col>
+                        <v-col no-gutters cols="9">
+                            <v-card v-if="prize.show_value" dark class="my-3" large block color="primary"
+                                @click="drawPrize(prize)">
+                                </v-card>
+                            <v-card v-if="prize.percentage_of_pot" class="my-3" large dark block color="primary"
+                                @click="drawPrize(prize)"> </v-card>
+                        </v-col>
+                    </v-row>
+                </div> -->
+
+                <!-- completed card -->
+
             </div>
             <YesNoModal ref="YesNoModal" />
             <ErrorDialog ref="ErrorDialog" />
@@ -68,7 +133,8 @@
                 dt_draw: null,
                 socket: null,
                 dt_draw_participants: null,
-                allDrawn: true
+                allDrawn: true,
+                drawStarted: false
 
             }
         },
@@ -78,6 +144,11 @@
             self.initWebsocket()
         },
         methods: {
+            getImg(item) {
+                let self = this
+
+                return process.env.VUE_APP_IMAGE_SERVER_ADDRESS + "DrawTime/Prizes/" + item.id + ".png"
+            },
             cancelDraw() {
                 let self = this
                 self.$refs.YesNoModal.show("error", "Cancel Draw", "Are you sure you wish to cancel this draw?",
@@ -106,7 +177,7 @@
                 self.dt_draw.prizes.forEach(prize => {
                     if (prize.winner_id == 0) {
                         self.allDrawn = false
-                    }else{
+                    } else {
                         self.anyDrawn = true
                     }
                 })
@@ -172,7 +243,6 @@
             onConnect() {
                 let self = this
                 console.log("connected");
-
             },
             onMessage(data) {
                 let self = this
@@ -181,11 +251,8 @@
                     self.getDrawDetails()
                 } else {
                     self.$refs.ErrorDialog.show("Error occured with draw",
-                        afterReturn => {
-
-                        })
+                        afterReturn => {})
                 }
-
             },
             initWebsocket() {
                 let self = this
@@ -218,6 +285,21 @@
                         }
                     })
             },
-        }
+            sendDrawControl(type, drawStarted) {
+                let self = this
+                let DrawMsg = {
+                    "MsgType": "STAGEGAMES",
+                    "GameType": "DRAWTIME",
+                    "Function": "READYDRAW",
+                    "Language": "DE",
+                    "Translate": ["Welcome", "Mobile Number"],
+                    "Draw_ID": self.dt_draw.id,
+                    "Action": type
+                }
+                console.log("ddrawmsg", DrawMsg);
+                self.socket.sendMessage(DrawMsg, self.onMessage)
+                self.drawStarted = drawStarted
+            }
+        },
     }
 </script>

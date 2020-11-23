@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn block color="primary" dark v-bind="attrs" v-on="on">
+            <v-btn  large  block color="primary" dark v-bind="attrs" v-on="on">
                 duplicate draw
             </v-btn>
         </template>

@@ -1,6 +1,11 @@
 <template>
     <div>
         <v-toolbar color="primary" dense dark>
+            <v-btn icon @click="routelanding()">
+                <v-icon>
+                    mdi-home
+                </v-icon>
+            </v-btn>
             <v-toolbar-title v-if="config!=null" @click="routelanding">
                 Draw Time - {{config.venue_name}}
             </v-toolbar-title>

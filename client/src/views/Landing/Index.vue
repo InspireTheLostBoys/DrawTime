@@ -15,6 +15,9 @@
                 <v-col cols="12" style="text-align: center;">
                     <v-btn color="info" width="200" to="/History">History</v-btn>
                 </v-col>
+                 <v-col cols="12" style="text-align: center;">
+                    <v-btn color="info" width="200" to="/Adverts">Adverts</v-btn>
+                </v-col>
                 <v-col cols="12" style="text-align: center;" v-if="userAccess.role_id == 1">
                     <v-btn color="info" width="200" to="/Settings">Settings</v-btn>
                 </v-col>

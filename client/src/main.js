@@ -9,6 +9,7 @@ import ErrorDialog from '@/components/Common/Overlays/Dialogs/Error.vue'
 import DuplicateDraw from '@/components/Common/DuplicateDraw.vue'
 
 import 'vue-datetime/dist/vue-datetime.css'
+import 'cropperjs/dist/cropper.css';
 
 // Mixins
 import ServiceCaller from './libs/service-caller.js';

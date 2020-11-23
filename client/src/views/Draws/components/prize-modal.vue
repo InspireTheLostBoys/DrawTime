@@ -36,17 +36,35 @@
                             <label>Percentage</label>
                             <v-text-field v-model="prize.pot_percentage" dense outlined type="number"></v-text-field>
                         </v-col>
+                        <v-col cols="12" style="text-align: left;">
+                            <label>Prize Image <v-btn icon color="error" @click="deleteIMG">
+                                    <v-icon>mdi-delete
+                                    </v-icon>
+                                </v-btn></label>
+                            <v-card height="250" width="250" @click="openFileBackGroundDialog">
+                                <object v-if="showImage" height="250" width="250" :data="getImg()" type="image/png">
+                                    <img height="100%" src="img/no-image.png" style="width:100% !important">
+                                </object>
+                            </v-card>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card>
+            <input accept="image/*" ref="FileBackGround" @change="uploadPrizeImage" type="file" style="display: none;">
             <ErrorDialog ref="ErrorDialog" />
+            <Cropper ref="Cropper" />
         </v-dialog>
     </v-row>
 </template>
 
 <script>
+    import axios from 'axios'
+    import Cropper from "@/components/Cropper.vue"
+
     export default {
-        components: {},
+        components: {
+            Cropper
+        },
         data() {
             return {
                 dialog: false,
@@ -59,11 +77,85 @@
                     percentage_of_pot: false,
                     pot_percentage: null,
                     prize_value: null,
+                    prize_image: "",
                 },
                 callback: null,
+                imageSrc: 'img/no-image.png',
+                showImage: true
             }
         },
         methods: {
+            deleteIMG() {
+                let self = this
+                self.showImage = false
+                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + '/delete?path=DrawTime/Prizes/' + self.prize.id)
+                    .then(r => {
+                        self.prize.prize_image = ''
+                        self.put(`dt_draw_prize`, self.prize).then(er => {})
+                        self.showImage = true
+                    })
+            },
+            openFileBackGroundDialog() {
+                let self = this;
+                self.$refs.FileBackGround.value = null;
+                self.$refs.FileBackGround.click();
+            },
+            getImg() {
+                let self = this
+
+                return process.env.VUE_APP_IMAGE_SERVER_ADDRESS + "DrawTime/Prizes/" + self.prize.id + ".png"
+            },
+            checkImage(file, callback) {
+                let self = this
+                var fr = new FileReader;
+
+                fr.onload = function () { // file is loaded
+                    var img = new Image;
+
+                    img.onload = function () {
+                        if (img.width != img.height) {
+                            self.$refs.ErrorDialog.show(
+                                "Please ensure prize image is a square (height and width must be the same)",
+                                res => {})
+                        } else {
+                            callback()
+                        }
+                    };
+
+                    img.src = fr.result; // is the data URL because called with readAsDataURL
+                };
+
+                fr.readAsDataURL(file)
+            },
+            uploadPrizeImage(e) {
+                let self = this;
+                let file = e.target.files[0];
+                self.$refs.Cropper.show(file, 1, afterComplete => {
+                    self.showImage = false
+                    self.checkImage(afterComplete, cb => {
+                        const formData = new FormData();
+                        formData.append('file', afterComplete)
+                        const config = {
+                            headers: {
+                                'content-type': 'multipart/form-data'
+                            }
+                        }
+
+                        axios.post(process.env.VUE_APP_IMAGE_SERVER_ADDRESS +
+                                'upload?path=DrawTime/Prizes/' + self.prize.id, formData,
+                                config)
+                            .then(r => {
+                                self.showImage = true
+                                self.prize.prize_image = 'Prizes/' + self.prize.id
+                                self.put(`dt_draw_prize`, self.prize).then(er => {
+                                    console.log("updated prize", er);
+                                })
+                            }).catch(err => {
+
+                            })
+                    })
+                })
+            },
             changeType(type) {
                 let self = this
                 if (type == 0) {
@@ -95,7 +187,11 @@
             submit() {
                 let self = this;
                 self.dialog = false
-                self.callback(self.prize)
+                self.put(`dt_draw_prize`, self.prize).then(er => {
+                    console.log("updated prize", er);
+                    self.callback(self.prize)
+
+                })
             }
         }
     }

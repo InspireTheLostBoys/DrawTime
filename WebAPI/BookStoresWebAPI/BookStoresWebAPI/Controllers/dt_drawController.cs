@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public List<dt_draw> Get()
         {
-            var draws = _context.dt_draw.Where(x=>x.completed==false&&x.cancelled==false).OrderBy(x => x.draw_time).ToList();
+            var draws = _context.dt_draw.Where(x => x.completed == false && x.cancelled == false).OrderBy(x => x.draw_time).ToList();
 
             return (List<dt_draw>)draws;
         }
@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
         [HttpGet("History")]
         public List<dt_draw> GetHistory()
         {
-            var draws = _context.dt_draw.Where(x => x.completed == true|| x.cancelled == true).OrderBy(x => x.draw_time).ToList();
+            var draws = _context.dt_draw.Where(x => x.completed == true || x.cancelled == true).OrderBy(x => x.draw_time).ToList();
 
             return (List<dt_draw>)draws;
         }
@@ -59,12 +59,14 @@ namespace WebAPI.Controllers
             {
                 var draw_id = draw.id;
                 draw.id = 0;
-                if (draw != null) {
+                if (draw != null)
+                {
                     draw.id = 0;
-                     _context.dt_draw.Add(draw);
+                    _context.dt_draw.Add(draw);
                     _context.SaveChanges();
-                    if (duplicatePrizes) {
-                    var existingPrizes = _context.dt_draw_prize.Where(x => x.draw_id== draw_id).ToList();
+                    if (duplicatePrizes)
+                    {
+                        var existingPrizes = _context.dt_draw_prize.Where(x => x.draw_id == draw_id).ToList();
                         foreach (var item in existingPrizes)
                         {
                             item.id = 0;
@@ -74,7 +76,8 @@ namespace WebAPI.Controllers
                             _context.SaveChanges();
                         }
                     }
-                    if (duplicateParticipants) {
+                    if (duplicateParticipants)
+                    {
                         var existingParticipants = _context.dt_draw_participant.Where(x => x.draw_id == draw_id).ToList();
                         foreach (var item in existingParticipants)
                         {
@@ -85,7 +88,7 @@ namespace WebAPI.Controllers
                         }
                     }
                 }
-                return draw; 
+                return draw;
             }
             catch (Exception exc)
             {
@@ -144,26 +147,30 @@ namespace WebAPI.Controllers
                 _context.Entry(dt_draw).State = EntityState.Modified;
                 _context.SaveChanges();
 
-              var existingPrizes = _context.dt_draw_prize.Where(x=> x.draw_id == dt_draw.id).ToList();
+                var existingPrizes = _context.dt_draw_prize.Where(x => x.draw_id == dt_draw.id).ToList();
                 foreach (var item in dt_draw.prizes)
                 {
-                    if (item.id == 0) {
+                    if (item.id == 0)
+                    {
                         _context.dt_draw_prize.Add(item);
                     }
                 }
-                foreach (var dbPrize in existingPrizes)
+
+                foreach (var reqPrize in dt_draw.prizes)
                 {
                     var MustDelete = true;
-                    foreach (var reqPrize in dt_draw.prizes)
+                    var dbPrize = existingPrizes.Where(x => x.id == reqPrize.id).First();
+                    if (dbPrize != null)
                     {
-                        if (dbPrize.id== reqPrize.id) {
-                            _context.Entry(dbPrize).State = EntityState.Modified;
-                            MustDelete = false;
-                        }
+                        _context.Entry(dbPrize).State = EntityState.Modified;
+                        _context.dt_draw_prize.Update(dbPrize);
+                        MustDelete = false;
+                        _context.SaveChanges();
                     }
-                    if (MustDelete) {
+                    if (MustDelete)
+                    {
                         _context.Entry(dbPrize).State = EntityState.Deleted;
-                    } 
+                    }
                 }
                 _context.SaveChanges();
             }
@@ -171,7 +178,6 @@ namespace WebAPI.Controllers
             {
                 retval.SetError($"Failed to update draw.", exc);
             }
-
             return retval;
         }
 
