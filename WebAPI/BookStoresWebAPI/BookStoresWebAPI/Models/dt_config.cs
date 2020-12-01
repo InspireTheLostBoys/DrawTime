@@ -14,5 +14,6 @@ namespace WebAPI.Models
         public int id { get; set; }
         public string venue_name { get; set; }
         public string t_and_c { get; set; }
+        public decimal? participation_perc { get; set; }
     }
 }

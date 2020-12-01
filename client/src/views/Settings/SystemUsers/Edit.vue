@@ -54,7 +54,8 @@
         data() {
             return {
                 user: null,
-                roles: [{
+                roles: [
+                    {
                         text: "Administrator",
                         value: 1
                     },

@@ -1,7 +1,5 @@
 <template>
-    <v-row justify="center">
-
-        <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
+        <v-dialog v-model="dialog" style="overflow-y:hidden" fullscreen persistent transition="dialog-bottom-transition">
             <v-toolbar dark color="primary" flat>
                 <v-btn icon dark @click="dialog = false">
                     <v-icon>mdi-close</v-icon>
@@ -11,8 +9,8 @@
                     T's & C's
                 </v-toolbar-title>
             </v-toolbar>
-            <v-card tile class="fill-height">
-                <v-container class="fill-height" style="overflow-y:scroll" fluid>
+            <v-card tile  style="overflow-y:scroll;align-text:left">
+                <v-container height="80vh"   fluid>
                     <h3>RULES, TERMS AND CONDITIONS GENERAL</h3>
                     <br>
                     <p>
@@ -31,8 +29,10 @@
                         or
                         any other party.
                     </p>
-                    INTRODUCTION
                     <ul>
+                        <h3>
+                            INTRODUCTION
+                        </h3>
                         <li>
                             The business is hosting Games which comprises of a variety of games and promotional Leader
                             Board competitions, hereinafter collectively referred to as BIAB.
@@ -50,8 +50,11 @@
                         <li>Leader Board competitions have specified start and end dates as depicted in the Leader Board
                             sections.</li>
                     </ul>
-                    RULES
+
                     <ul>
+                        <h3>
+                            RULES
+                        </h3>
                         <li>
                             Number of entries per person per game is limited to the amount as determined by the
                             business.
@@ -75,14 +78,11 @@
                             the relevant sections, are to be adhered to.
                         </li>
                     </ul>
-                    <br>
-                    TERMS
-                    <br>
-                    Entries
-                    <br>
                     <ul>
+                        <h3>
+                            TERMS & Entries
+                        </h3>
                         <li>Costs/Entry fees to enter games can be determined by the business owner.
-
                         </li>
                         <li>
                             Entries received after the game has started, will not be considered.
@@ -101,10 +101,10 @@
                             The business reserves the right to change the Rules and the Terms, without notice.
                         </li>
                     </ul>
-                    <br>
-                    WINNERS
-                    <br>
                     <ul>
+                        <h3>
+                            WINNERS
+                        </h3>
                         <li>
                             The business will offer prizes for each game.
                         </li>
@@ -165,11 +165,13 @@
                             The business’ decision is final, and no further correspondence will be entered into.
                         </li>
                     </ul>
-                    <br>
-                    DISQUALIFIED PARTICIPANTS
-                    <br>
-                    The following persons are prohibited from participating in BIAB games:
                     <ul>
+                        <h3>
+                            DISQUALIFIED PARTICIPANTS
+                        </h3>
+                        <h4>
+                            The following persons are prohibited from participating in BIAB games:
+                        </h4>
                         <li>
                             Directors, members, partners, promotional and advertising agents, merchandisers, employees,
                             or consultants of the business.
@@ -183,10 +185,10 @@
                             Persons under the age of 18 years.
                         </li>
                     </ul>
-                    <br>
-                    PRIVACY
-                    <br>
                     <ul>
+                        <h3>
+                            PRIVACY
+                        </h3>
                         <li>
                             All information provided shall be treated confidential.
                         </li>
@@ -209,10 +211,10 @@
                             best endeavours to ensure data privacy, neither entity makes any warranty in this regard.
                         </li>
                     </ul>
-                    <br>
-                    OTHER
-                    <br>
                     <ul>
+                        <h3>
+                            OTHER
+                        </h3>
                         <li>
                             All Participants participate entirely at their own risk. Participants indemnify and holds
                             harmless the business, Dev I.T., their directors, employees and agents of any and all
@@ -249,7 +251,6 @@
                             Dev I.T.’s obligations in regard to the BIAB Game as well as in regard to the awarding of
                             prizes, shall cease.</li>
                     </ul>
-
                 </v-container>
                 <!-- <v-card-actions>
                     <v-spacer></v-spacer>
@@ -257,7 +258,6 @@
                 </v-card-actions> -->
             </v-card>
         </v-dialog>
-    </v-row>
 </template>
 
 <script>

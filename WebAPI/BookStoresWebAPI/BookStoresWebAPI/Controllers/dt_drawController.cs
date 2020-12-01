@@ -143,6 +143,13 @@ namespace WebAPI.Controllers
 
             try
             {
+                var participants = _context.dt_draw_participant.Where(x => x.draw_id == dt_draw.id).ToList();
+                var totaltickets = 0;
+                foreach (var participant in participants)
+                {
+                    totaltickets += participant.tickets;
+                }
+                dt_draw.total_tickets = totaltickets;
                 dt_draw.total_pot = dt_draw.ticket_cost * dt_draw.total_tickets;
                 _context.Entry(dt_draw).State = EntityState.Modified;
                 _context.SaveChanges();

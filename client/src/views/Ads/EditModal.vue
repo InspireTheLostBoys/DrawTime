@@ -1,6 +1,6 @@
 <template>
     <v-row justify="center">
-        <v-dialog v-model="dialog" persistent transition="dialog-bottom-transition">
+        <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
             <v-card tile>
                 <v-toolbar dark color="primary" flat>
                     <v-btn icon dark @click="dialog = false">
@@ -15,34 +15,40 @@
                 </v-toolbar>
                 <v-container fluid class="fill-height">
                     <v-row no-gutters>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label>Description</label>
                             <v-text-field v-model="ad.description" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label>Line 1</label>
                             <v-text-field v-model="ad.line1" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label>Line 2</label>
                             <v-text-field v-model="ad.line2" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label>Line 3</label>
                             <v-text-field v-model="ad.line3" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label>Line 4</label>
                             <v-text-field v-model="ad.line4" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col class="pa-1" cols="12" lg="6" md="6">
+                            <label></label>
+                            <v-checkbox  label="use date range" v-model="useDateRange" @change="setDates()">
+
+                            </v-checkbox>
+                        </v-col>
+                        <v-col v-if="useDateRange" class="pa-1" cols="12" lg="6" md="6">
                             <label>Show from</label>
-                            <datetime type="datetime" v-model="ad.show_from" class="input">
+                            <datetime :minute-step="15" type="datetime" v-model="ad.show_from" class="input">
                             </datetime>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col v-if="useDateRange" class="pa-1" cols="12" lg="6" md="6">
                             <label>Show to</label>
-                            <datetime type="datetime" v-model="ad.show_to" class="input">
+                            <datetime :minute-step="15" type="datetime" v-model="ad.show_to" class="input">
                             </datetime>
                         </v-col>
                         <v-col cols="12" style="text-align: left;">
@@ -50,8 +56,8 @@
                                     <v-icon>mdi-delete
                                     </v-icon>
                                 </v-btn> </label>
-                            <v-card v-if="showImage" height="250" width="250" @click="openfileTitleDialog">
-                                <object height="250" width="250" :data="getImg('Ads')" type="image/png">
+                            <v-card v-if="showImage" height="200" width="355" @click="openfileTitleDialog">
+                                <object height="200" width="100%" :data="getImg('Ads')" type="image/png">
                                     <img height="100%" src="img/no-image.png" style="width:100% !important">
                                 </object>
                             </v-card>
@@ -78,6 +84,7 @@
         },
         data() {
             return {
+                useDateRange: true,
                 dialog: false,
                 showImage: true,
                 ad: {
@@ -95,6 +102,13 @@
             }
         },
         methods: {
+            setDates() {
+                let self = this
+                if (self.useDateRange == false) {
+                    self.ad.show_from = null
+                    self.ad.show_to = null
+                }
+            },
             deleteIMG(directory) {
                 let self = this
                 self.showImage = false
@@ -102,13 +116,17 @@
                     .then(r => {
                         console.log(r.data);
                         self.ad.ad_image = ''
-                        self.put(`dt_ads`, self.ad).then(r => {})
+                        self.put(`playlists`, self.ad).then(r => {})
                         self.showImage = true
                     })
             },
             validate() {
                 let self = this
-                self.put(`dt_ads`, self.ad).then(r => {
+                if (self.useDateRange) {
+                    self.ad.show_from = self.FormatDateTime(self.ad.show_from)
+                    self.ad.show_to = self.FormatDateTime(self.ad.show_to)
+                }
+                self.put(`playlists`, self.ad).then(r => {
                     self.dialog = false
                     self.callback()
                 })
@@ -126,12 +144,12 @@
                             'content-type': 'multipart/form-data'
                         }
                     }
-                    axios.post(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'upload?path=DrawTime/adverts/' + self
+                    axios.post(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'upload?path=DrawTime/Ads/' + self
                             .ad.id, formData, config)
                         .then(r => {
                             console.log(r.data);
-                            ad.ad_image = 'DrawTime/adverts/' + self.ad.id
-                            self.put(`dt_ads`, self.ad).then(r => {})
+                            self.ad.ad_image = 'DrawTime/Ads/' + self.ad.id
+                            self.put(`playlists`, self.ad).then(r => {})
                             self.showImage = true
                         })
                 })

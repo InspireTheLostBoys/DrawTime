@@ -16,6 +16,7 @@
                 </v-icon>
             </v-btn>
         </v-toolbar>
+
         <!-- <router-link to="/Landing">Landing</router-link>
         |
         <router-link to="/CreateDraw">Create Draw</router-link>
@@ -23,12 +24,20 @@
         <router-link to="/Participants">Participants</router-link> -->
 
         <router-view />
+        <v-btn @click="$router.back()" color="primary" class="fab-button" elevation="8" fab>
+            <v-icon>
+                mdi-arrow-left
+            </v-icon>
+        </v-btn>
+        <YesNoModal ref="YesNoModal" />
     </div>
 </template>
 <script>
+    import YesNoModal from '@/components/YesNoModal.vue'
+
     export default {
         components: {
-
+            YesNoModal
         },
         data() {
             return {
@@ -38,9 +47,8 @@
         methods: {
             routelanding() {
                 let self = this
-                if (self.$route.path != "/Landing")
+                if (!self.$route.path.includes('Landing'))
                     self.$router.push('/Landing')
-
             },
             getSystemConfig() {
                 let self = this;
@@ -51,17 +59,31 @@
             },
             logout() {
                 let self = this
-                localStorage.clear()
-                this.$router.push('/Login')
+                self.$refs.YesNoModal.show("warning", "Logout", "Are you sure you wish to Logout?", value => {
+                    if (value) {
+                        localStorage.clear()
+                        this.$router.push('/Login')
+                    }
+                })
             },
         },
         mounted() {
             if (localStorage.userDetails == undefined || localStorage.userDetails == null) {
                 this.$router.push('/Login')
             } else {
-                this.$router.push('/Landing')
+                if (!this.$route.path.includes('Landing'))
+                    this.$router.push('/Landing')
             }
             this.getSystemConfig()
         },
     }
 </script>
+
+
+<style scoped>
+    .fab-button {
+        bottom: 5px;
+        margin-left: 5px;
+        position: fixed;
+    }
+</style>

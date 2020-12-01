@@ -19,8 +19,8 @@ namespace WebAPI.Models
         public int draw_type { get; set; }
         public bool entry_fee { get; set; }
         public decimal ticket_cost { get; set; }
-        public bool cancelled { get; set; }
-        public bool completed { get; set; }
+        public bool? cancelled { get; set; }
+        public bool? completed { get; set; }
         public int total_tickets { get; set; }
         public decimal total_pot { get; set; }
         public string bk_image { get; set; }

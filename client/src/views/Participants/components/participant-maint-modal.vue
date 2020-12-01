@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center">
-        <v-dialog v-model="dialog" transition="dialog-bottom-transition">
-            <v-card>
+        <v-dialog v-model="dialog" width="500"  transition="dialog-bottom-transition">
+            <v-card >
                 <v-card-text class="px-3 py-3" v-if="participant != null">
                     <v-row no-gutters>
                         <v-col cols="12">

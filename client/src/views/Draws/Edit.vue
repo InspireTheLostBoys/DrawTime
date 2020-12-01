@@ -13,17 +13,20 @@
                 </v-col>
                 <v-col cols="12">
                     <label>Issue open</label>
-                    <datetime type="datetime" :max-datetime="draw.issue_close" v-model="draw.issue_open" class="input">
+                    <datetime type="datetime" :minute-step="15" :max-datetime="draw.issue_close"
+                        v-model="draw.issue_open" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Issue close</label>
-                    <datetime type="datetime" :min-datetime="draw.issue_open" v-model="draw.issue_close" class="input">
+                    <datetime type="datetime" :minute-step="15" :min-datetime="draw.issue_open"
+                        v-model="draw.issue_close" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Draw time</label>
-                    <datetime type="datetime" :min-datetime="draw.issue_close" v-model="draw.draw_time" class="input">
+                    <datetime type="datetime" :minute-step="15" :min-datetime="draw.issue_close"
+                        v-model="draw.draw_time" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12" v-if="draw.draw_type == 2">
@@ -41,24 +44,24 @@
                 </v-col>
             </v-row>
             <v-row no-gutters>
-                <v-col style="text-align: left;">
+                <v-col cols="12" xs="12" sm="12" md="12" lg="3" xl="3" class="pa-1" style="text-align: left;">
                     <label>Draw Background <v-btn icon color="error" @click="deleteIMG('DrawTime/draw_background')">
                             <v-icon>mdi-delete
                             </v-icon>
                         </v-btn></label>
-                    <v-card height="250" width="250" @click="openFileBackGroundDialog" v-if="showImage">
-                        <object height="250" width="250" :data="getImg('draw_background')" type="image/png">
+                    <v-card height="200" width="355" @click="openFileBackGroundDialog" v-if="showImage">
+                        <object height="200" width="100%" :data="getImg('draw_background')" type="image/png">
                             <img height="100%" src="img/no-image.png" style="width:100% !important">
                         </object>
                     </v-card>
                 </v-col>
-                <v-col style="text-align: left;">
+                <v-col cols="12" xs="12" sm="12" md="12" lg="3" xl="3" class="pa-1" style="text-align: left;">
                     <label>Title Image<v-btn icon color="error" @click="deleteIMG('DrawTime/draw_title')">
                             <v-icon>mdi-delete
                             </v-icon>
                         </v-btn> </label>
                     <v-card height="250" width="250" @click="openfileTitleDialog" v-if="showImage">
-                        <object height="250" width="250" :data="getImg('draw_title')" type="image/png">
+                        <object height="250" width="100%" :data="getImg('draw_title')" type="image/png">
                             <img height="100%" src="img/no-image.png" style="width:100% !important">
                         </object>
                     </v-card>
@@ -79,10 +82,16 @@
                 <v-col cols="12" class="pt-0">
                     <v-btn block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
                 </v-col>
-                <v-col cols="12" @click="$router.push('/Landing')" class="pt-0">
-                    <v-btn block large>Cancel </v-btn>
-                </v-col>
+              
             </v-row>
+            <v-snackbar color="success" v-model="snackbar" :timeout="2000">
+                Draw successfully updated
+                <template v-slot:action="{ attrs }">
+                    <v-btn text v-bind="attrs" @click="snackbar = false">
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
         </v-container>
         <Participants ref="participantsModal" />
         <prizeModal ref="prizeModal" />
@@ -114,10 +123,11 @@
             Datetime,
             Participants,
             prizeModal,
-            YesNoModal
+            YesNoModal,
         },
         data() {
             return {
+                snackbar: false,
                 showImage: true,
                 imageSrc: '',
                 progress: 100,
@@ -175,7 +185,7 @@
                         } else {
                             self.draw.title_image = ''
                         }
-                        self.updateDraw()
+                        self.updateDraw(false)
                         self.showImage = true
                     })
             },
@@ -207,7 +217,7 @@
                                 self.showImage = true
                                 self.draw.title_image = 'draw_title/' + self
                                     .draw.id
-                                self.updateDraw()
+                                self.updateDraw(false)
                                 console.log(r.data);
                             })
                     })
@@ -234,7 +244,7 @@
                             console.log(r.data);
                             self.draw.bk_image = 'draw_background/' + self.draw.id
                             self.showImage = true
-                            self.updateDraw()
+                            self.updateDraw(false)
                         }).catch(err => {
 
                         })
@@ -272,7 +282,7 @@
                     self.$refs.ErrorDialog.show("Please ensure all draw details are filled in",
                         val => {})
                 } else {
-                    self.updateDraw()
+                    self.updateDraw(true)
                 }
             },
             cancelDraw() {
@@ -321,14 +331,17 @@
                     let prize = {
                         id: 0,
                         draw_id: self.draw.id,
-                        description: "New prize " +(self.draw.prizes.length+1),
+                        description: "New prize " + (self.draw.prizes.length + 1),
                         sequence_no: 1,
                         show_value: true,
                         percentage_of_pot: false,
                         pot_percentage: 0,
                         prize_value: 1,
+                        prize_cost: 2
                     }
                     self.post('dt_draw_prize', prize).then(r => {
+                        console.log("add prize", r.data);
+
                         self.$refs.prizeModal.show(r.data.dt_draw_prize, newPrize => {
                             let addablePrize = JSON.parse(JSON.stringify(newPrize))
                             self.draw.prizes.push(addablePrize)
@@ -344,13 +357,19 @@
                         self.draw = r.data.dt_draw;
                     })
             },
-            updateDraw() {
+            updateDraw(reload) {
                 let self = this;
+
+                self.draw.issue_open = self.FormatDateTime(self.draw.issue_open)
+                self.draw.issue_close = self.FormatDateTime(self.draw.issue_close)
+                self.draw.draw_time = self.FormatDateTime(self.draw.draw_time)
                 self.put('dt_draw', self.draw)
                     .then(r => {
                         console.log("update draw", r);
-                        self.$router.back();
-                        // self.$router.push('/Participants/'+r.data.dt_draw.id)
+                        // self.snackbar = true
+                        if (reload) {
+                            self.$router.back()
+                        }
                     })
             }
         }

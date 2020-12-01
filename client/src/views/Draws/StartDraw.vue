@@ -7,112 +7,88 @@
                 persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
             <v-row no-gutters>
-                <v-col cols="6" class="pa-1">
+                <v-col cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
                     <DuplicateDraw ref="DuplicateDraw" :draw="dt_draw" />
                 </v-col>
-                <v-col v-if="!anyDrawn" cols="6" class="pa-1">
+                <v-col v-if="!anyDrawn" cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
                     <v-btn block color="error" large @click="cancelDraw">Cancel Draw
                     </v-btn>
                 </v-col>
-                <v-col v-if="!anyDrawn" cols="6" class="pa-1">
-                    <v-btn large color="warning" @click="$router.push('/Participants/' + dt_draw.id)" block>edit</v-btn>
+                <v-col v-if="!anyDrawn" cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
+                    <v-btn large color="warning" @click="$router.push('/EditDraw/' + dt_draw.id)" block>edit</v-btn>
                 </v-col>
-
-                <v-col v-if="!drawStarted" cols="6" class="pa-1">
+                <v-col v-if="!drawStarted" cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
                     <v-btn large block color="success" @click="sendDrawControl('SHOW',true)">
                         show draw
                     </v-btn>
                 </v-col>
-                <v-col v-if="drawStarted" cols="6" class="pa-1">
+                <v-col v-if="drawStarted" cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
                     <v-btn large block color="success" @click="sendDrawControl('HIDE',false)">
                         Hide draw
                     </v-btn>
                 </v-col>
-                <v-col v-if="drawStarted" cols="6" class="pa-1">
+                <v-col v-if="drawStarted" cols="6" xs="6" sm="6" md="3" lg="3" xl="3" class="pa-1">
                     <v-btn large block color="warning" @click="sendDrawControl('RESET',true)">
                         reset display
                     </v-btn>
                 </v-col>
-                <v-col v-if="allDrawn && !dt_draw.completed" cols="12" class="pa-1">
+                <v-col v-if="allDrawn && !dt_draw.completed" cols="12" xs="12" sm="12" md="3" lg="3" xl="3"
+                    class="pa-1">
                     <v-btn large block color="success" @click="completeDraw(true)">
                         mark draw as complete
                     </v-btn>
                 </v-col>
-                <v-col v-if="dt_draw.completed" cols="12" class="pa-1">
+                <v-col v-if="dt_draw.completed" cols="12" xs="12" sm="12" md="3" lg="3" xl="3" class="pa-1">
                     <v-btn large block color="warning" @click="completeDraw(false)">
                         mark draw as incomplete
                     </v-btn>
                 </v-col>
             </v-row>
-
-            <div v-if="dt_draw!=null" v-for="(prize,idx) in dt_draw.prizes" :key="idx">
-                <v-card @click="drawPrize(prize)" v-if="prize.winner_id==0" class="ma-2" color="primary" dark>
-                    <div class="d-flex flex-no-wrap justify-space-between">
-                        <div>
-                            <v-card-title class="headline"> Draw
-                                for:</v-card-title>
-                            <v-card-subtitle  v-if="prize.show_value" cols="12" no-gutters>
-
-                                {{prize.description}} - R{{prize.prize_value}}
-                            </v-card-subtitle>
-                            <v-card-subtitle  v-if="prize.percentage_of_pot" cols="12" no-gutters>
-
-                                {{prize.description}} - {{prize.pot_percentage}}% of Pot
-                            </v-card-subtitle>
-                        </div>
-                        <v-avatar class="ma-3" size="125" tile>
-                            <object height="100" width="100%" :data="getImg(prize)" type="image/png">
-                                <img height="100%" src="img/no-image.png" style="width:100% !important">
-                            </object>
-                        </v-avatar>
-                    </div>
-                </v-card>
-
-                <v-card class="ma-2" v-else block color="grey lighten-1" justify-center align-center>
-                    <div class="d-flex flex-no-wrap justify-space-between">
-                        <div>
-                             <v-card-title class="headline"> Prize DRAWN :</v-card-title>
-                            <v-card-subtitle v-if="prize.show_value" cols="12" no-gutters >
-                                {{prize.description}} - R{{prize.prize_value}}
-                            </v-card-subtitle>
-                            <v-card-subtitle v-if="prize.percentage_of_pot" cols="12" no-gutters >
-                                 {{prize.description}} - {{prize.pot_percentage}}% of Pot
-                            </v-card-subtitle>
-
-                            <v-col v-if="dt_draw_participants!=null" cols="12" >
-                                Winner : {{GetDrawWinner(prize)}}
-                            </v-col>
-                        </div>
-                        <v-avatar class="ma-3" size="125" tile>
-                            <object height="100" width="100%" :data="getImg(prize)" type="image/png">
-                                <img height="100%" src="img/no-image.png" style="width:100% !important">
-                            </object>
-                        </v-avatar>
-                    </div>
-                </v-card>
-                <!-- draw prizes -->
-                <!-- <div v-if="prize.winner_id==0">
-                    <v-row no-gutters>
-                        <v-col no-gutters cols="3">
-                            <v-card class="my-3" height="100" width="100%">
+            <v-row>
+                <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6" v-if="dt_draw!=null"
+                    v-for="(prize,idx) in dt_draw.prizes" :key="idx">
+                    <v-card @click="drawPrize(prize)" v-if="prize.winner_id==0&&drawStarted" color="primary" dark>
+                        <div class="d-flex flex-no-wrap justify-space-between">
+                            <div>
+                                <v-card-title class="headline"> Draw
+                                    for:</v-card-title>
+                                <v-card-subtitle v-if="prize.show_value" cols="12" no-gutters>
+                                    {{prize.description}} - R{{prize.prize_value}}
+                                </v-card-subtitle>
+                                <v-card-subtitle v-if="prize.percentage_of_pot" cols="12" no-gutters>
+                                    {{prize.description}} - {{prize.pot_percentage}}% of Pot
+                                </v-card-subtitle>
+                            </div>
+                            <v-avatar class="ma-3" size="125" tile>
                                 <object height="100" width="100%" :data="getImg(prize)" type="image/png">
                                     <img height="100%" src="img/no-image.png" style="width:100% !important">
                                 </object>
-                            </v-card>
-                        </v-col>
-                        <v-col no-gutters cols="9">
-                            <v-card v-if="prize.show_value" dark class="my-3" large block color="primary"
-                                @click="drawPrize(prize)">
-                                </v-card>
-                            <v-card v-if="prize.percentage_of_pot" class="my-3" large dark block color="primary"
-                                @click="drawPrize(prize)"> </v-card>
-                        </v-col>
-                    </v-row>
-                </div> -->
-
-                <!-- completed card -->
-
-            </div>
+                            </v-avatar>
+                        </div>
+                    </v-card>
+                    <v-card v-if="prize.winner_id!=0"  block color="grey lighten-1" justify-center align-center>
+                        <div class="d-flex flex-no-wrap justify-space-between">
+                            <div>
+                                <v-card-title class="headline"> Prize DRAWN :</v-card-title>
+                                <v-card-subtitle v-if="prize.show_value" cols="12" no-gutters>
+                                    {{prize.description}} - R{{prize.prize_value}}
+                                </v-card-subtitle>
+                                <v-card-subtitle v-if="prize.percentage_of_pot" cols="12" no-gutters>
+                                    {{prize.description}} - {{prize.pot_percentage}}% of Pot
+                                </v-card-subtitle>
+                                <v-col v-if="dt_draw_participants!=null" cols="12">
+                                    Winner : {{GetDrawWinner(prize)}}
+                                </v-col>
+                            </div>
+                            <v-avatar class="ma-3" size="125" tile>
+                                <object height="100" width="100%" :data="getImg(prize)" type="image/png">
+                                    <img height="100%" src="img/no-image.png" style="width:100% !important">
+                                </object>
+                            </v-avatar>
+                        </div>
+                    </v-card>
+                </v-col>
+            </v-row>
             <YesNoModal ref="YesNoModal" />
             <ErrorDialog ref="ErrorDialog" />
         </v-container>
@@ -135,7 +111,6 @@
                 dt_draw_participants: null,
                 allDrawn: true,
                 drawStarted: false
-
             }
         },
         mounted() {
@@ -235,8 +210,10 @@
                         self.checkAllPrizes()
                     })
             },
-            logError() {
+            logError(message) {
                 let self = this
+                console.log(message);
+
                 self.$refs.ErrorDialog.show("Failed to connect to Websocket",
                     afterReturn => {})
             },
@@ -257,7 +234,7 @@
             initWebsocket() {
                 let self = this
                 let params = {
-                    wsAddress: 'ws://192.168.1.177:17501',
+                    wsAddress: process.env.VUE_APP_WS_ADDRESS,
                     onConnect: self.onConnect,
                     onMessage: self.onMessage,
                     onError: self.logError

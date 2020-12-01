@@ -14,7 +14,8 @@ import DrawStart from '../views/Draws/StartDraw.vue'
 import History from '../views/History/Index.vue'
 import HistoryItems from '../views/History/HistoryItems.vue'
 
-
+//Reports
+import Reports from '../views/Reports/Index.vue'
 
 // Participants
 import Participants from '../views/Participants/Index.vue'
@@ -81,6 +82,10 @@ const routes = [{
         path: '/Participants/:draw_id',
         name: 'participants',
         component: Participants,
+      }, {
+        path: '/Reports',
+        name: 'reports',
+        component: Reports,
       },
       {
         path: '/Settings',

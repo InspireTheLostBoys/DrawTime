@@ -11,7 +11,7 @@ using WebAPI.Models;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/playlists")]
     [ApiController]
     public class dt_adsController : ControllerBase
     {

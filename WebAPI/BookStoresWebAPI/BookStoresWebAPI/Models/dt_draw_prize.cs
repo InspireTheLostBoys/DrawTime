@@ -14,12 +14,14 @@ namespace WebAPI.Models
         public int id { get; set; }
         public int draw_id { get; set; }
         public string description { get; set; }
-        public int sequence_no { get; set; }
-        public bool show_value { get; set; }
-        public bool percentage_of_pot { get; set; }
-        public decimal pot_percentage { get; set; }
-        public decimal prize_value { get; set; }
-        public int winner_id { get; set; }
+        public int? sequence_no { get; set; }
+        public bool? show_value { get; set; }
+        public bool? percentage_of_pot { get; set; }
+        public decimal? pot_percentage { get; set; }
+        public decimal? prize_value { get; set; }
+        public decimal? prize_cost{ get; set; }
+
+        public int? winner_id { get; set; }
         public string prize_image { get; set; }
 
 

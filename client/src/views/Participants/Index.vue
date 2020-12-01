@@ -5,7 +5,8 @@
             <div class="mt-1" v-if="dt_draw_participants!=null">{{ dt_draw.total_tickets }} tickets
                 {{dt_draw_participants.length}} persons</div>
             <h4 class="mt-1">Prize value: R{{dt_draw.total_pot}}</h4>
-            <v-btn class="my-3" large block color="primary" @click="addEntry">Add Entry</v-btn>
+            <v-btn v-if="dt_draw!=null" :disabled="canAddEntry()" class="my-3" large block color="primary"
+                @click="addEntry">Add Entry</v-btn>
             <v-text-field v-model="searchText" append-icon="mdi-magnify" placeholder="Search..." dense hide-details
                 outlined class="mb-3 pt-2">
             </v-text-field>
@@ -136,6 +137,16 @@
             self.getUserAccess()
         },
         methods: {
+            canAddEntry() {
+                let self = this
+                let newDateNoForm = new Date()
+                console.log(self.dt_draw);
+                let newDate = self.FormatDateTime(newDateNoForm)
+                console.log(newDate + ">" + self.FormatDateTime(self.dt_draw.issue_close));
+
+                return (newDate > self.FormatDateTime(self.dt_draw.issue_close))
+
+            },
             getUserAccess() {
                 let self = this
                 console.log(localStorage.getItem("userDetails"));
@@ -180,17 +191,17 @@
             },
             addEntry() {
                 let self = this;
-
+                let userDetails = JSON.parse(localStorage.userDetails)
                 let draw_id = self.$route.params.draw_id;
 
                 let blankParticipant = {
                     id: 0,
                     draw_id: draw_id,
-                    reference: null,
+                    reference: null,    
                     display_name: null,
                     tickets: null,
                     cancelled: false,
-                    issued_by: 1,
+                    issued_by: userDetails.user_id,
                 }
 
                 self.$refs.participantsMaint.show(blankParticipant, self.dt_draw, true, participant => {

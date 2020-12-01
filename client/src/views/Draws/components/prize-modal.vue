@@ -27,6 +27,10 @@
                             <label>Value</label>
                             <v-text-field v-model="prize.prize_value" dense outlined type="number"></v-text-field>
                         </v-col>
+                        <v-col cols="12" v-if="prize.show_value">
+                            <label>Cost</label>
+                            <v-text-field v-model="prize.prize_cost" dense outlined type="number"></v-text-field>
+                        </v-col>
                         <v-col cols="12">
                             <v-checkbox @change="changeType(1)" v-model="prize.percentage_of_pot" dense outlined
                                 label="Use Percentage of Pot">
@@ -78,6 +82,7 @@
                     pot_percentage: null,
                     prize_value: null,
                     prize_image: "",
+                    prize_cost: null
                 },
                 callback: null,
                 imageSrc: 'img/no-image.png',
@@ -164,6 +169,7 @@
                 } else {
                     self.prize.show_value = !self.prize.percentage_of_pot
                     self.prize.prize_value = 0
+                    self.prize_cost = 0
                 }
             },
             show(prize, callback) {
@@ -176,12 +182,20 @@
             },
             validate() {
                 let self = this
-                if ((self.prize.percentage_of_pot && self.prize.pot_percentage <= 0) || (self.prize.show_value && self
+                if ((self.prize.percentage_of_pot && self.prize.pot_percentage <= 0) || (self.prize
+                        .show_value && self
                         .prize.prize_value <= 0)) {
                     self.$refs.ErrorDialog.show("Please ensure all prize information is filled in",
                         afterReturn => {})
                 } else {
-                    self.submit()
+                    if (self.prize.show_value && parseFloat(self.prize.prize_cost) >= parseFloat(self.prize
+                        .prize_value)) {
+                        self.$refs.ErrorDialog.show("Prize value must be greater than prize cost",
+                            afterReturn => {
+                            })
+                    } else {
+                        self.submit()
+                    }
                 }
             },
             submit() {

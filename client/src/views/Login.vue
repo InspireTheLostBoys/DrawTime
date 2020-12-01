@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <v-content>
-      <v-img src="img/login.jpg" style="height: 100vh">
+
+      <!-- <v-img src="img/login.jpg" style="height: 100vh">
         <v-container fluid class="fill-height" style="background: transparent; height: 100vh">
           <v-row justify="center">
             <v-col cols="10" v-if="!reset" style="margin-top: 200px;">
@@ -23,7 +24,38 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-img>
+      </v-img> -->
+      <v-container justify="center">
+        <v-row justify="center">
+          <v-card flat justify="center">
+            <v-container fluid class="fill-height" style="background: transparent; ">
+              <v-row justify="center">
+                <v-col cols="10" v-if="!reset">
+                  <v-img contain max-height="500" src="img/DrawTime-Logo.png">
+                  </v-img>
+                  <v-form @submit.prevent="login" ref="form" v-model="valid" lazy-validation>
+                    <v-text-field prepend-inner-icon="mdi-account" dense placeholder="User ID" filled v-model="uid"
+                      required>
+                    </v-text-field>
+
+                    <v-text-field type="password" prepend-inner-icon="mdi-lock" dense placeholder="Pin" filled
+                      v-model="pin" required>
+                    </v-text-field>
+
+                    <v-btn depressed rounded :loading="loading" type="submit" large block class="ml-0 mb-5"
+                      color="yellow">Sign in
+                    </v-btn>
+
+                    <div class="text-center">
+                      <div class="error--text">{{ errorText }}</div>
+                    </div>
+                  </v-form>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card>
+        </v-row>
+      </v-container>
     </v-content>
     <ErrorDialog ref="error" />
   </v-app>

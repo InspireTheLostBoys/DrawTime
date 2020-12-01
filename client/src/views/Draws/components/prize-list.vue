@@ -1,11 +1,16 @@
 <template>
     <div>
-        <div>Prizes
-            <v-btn icon @click="addPrize">
-                <v-icon> mdi-plus
-                </v-icon>
-            </v-btn>
-        </div>
+        <v-toolbar dense flat >
+            <v-toolbar-title>
+                Prizes 
+
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+                <v-btn @click="addPrize" color="primary">
+                    Add Prize
+                </v-btn>
+        </v-toolbar>
+
 
         <table style="width: 100%;" class="blueTable">
             <tr style="text-align: left">
@@ -31,7 +36,7 @@
 </template>
 <script>
     export default {
-        props: ["prizes", "addPrize","editPrize","deletePrize"],
+        props: ["prizes", "addPrize", "editPrize", "deletePrize"],
         data() {
             return {
 

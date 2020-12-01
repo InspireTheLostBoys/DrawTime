@@ -48,7 +48,8 @@
                 pin: '',
                 role:null,
                 inactive: false,
-                roles: [{
+                roles: [
+                    {
                         text: "Administrator",
                         value: 1
                     },
