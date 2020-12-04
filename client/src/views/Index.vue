@@ -54,7 +54,12 @@
                 let self = this;
                 self.get('dt_config')
                     .then(r => {
+                        console.log(r.data.dt_config);
+                        
                         self.config = r.data.dt_config;
+                    }).catch(e=>{
+                        console.log(e);
+                        
                     })
             },
             logout() {

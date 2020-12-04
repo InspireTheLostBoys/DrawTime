@@ -143,7 +143,8 @@
                 console.log(self.dt_draw);
                 let newDate = self.FormatDateTime(newDateNoForm)
                 console.log(newDate + ">" + self.FormatDateTime(self.dt_draw.issue_close));
-
+                console.log(newDate > self.FormatDateTime(self.dt_draw.issue_close));
+                
                 return (newDate > self.FormatDateTime(self.dt_draw.issue_close))
 
             },

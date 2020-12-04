@@ -47,7 +47,8 @@
             <v-row>
                 <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6" v-if="dt_draw!=null"
                     v-for="(prize,idx) in dt_draw.prizes" :key="idx">
-                    <v-card @click="drawPrize(prize)" v-if="prize.winner_id==0&&drawStarted" color="primary" dark>
+                    <v-card @click="drawPrize(prize)" v-if="(prize.winner_id==0||prize.winner_id==null)&&drawStarted"
+                        color="primary" dark>
                         <div class="d-flex flex-no-wrap justify-space-between">
                             <div>
                                 <v-card-title class="headline"> Draw
@@ -66,7 +67,8 @@
                             </v-avatar>
                         </div>
                     </v-card>
-                    <v-card v-if="prize.winner_id!=0"  block color="grey lighten-1" justify-center align-center>
+                    <v-card v-if="(prize.winner_id!=0&&prize.winner_id!=null)" block color="grey lighten-1"
+                        justify-center align-center>
                         <div class="d-flex flex-no-wrap justify-space-between">
                             <div>
                                 <v-card-title class="headline"> Prize DRAWN :</v-card-title>
@@ -150,7 +152,7 @@
                 self.allDrawn = true
                 self.anyDrawn = false
                 self.dt_draw.prizes.forEach(prize => {
-                    if (prize.winner_id == 0) {
+                    if (prize.winner_id == 0 || prize.winner_id == null) {
                         self.allDrawn = false
                     } else {
                         self.anyDrawn = true
@@ -204,8 +206,13 @@
                 let draw_id = self.$route.params.draw_id;
                 self.get('dt_draw/' + draw_id)
                     .then(r => {
+                        let newDateNoForm = new Date()
                         console.log(r);
                         self.dt_draw = r.data.dt_draw;
+                        if (self.FormatDateTime(newDateNoForm) < self.FormatDateTime(self.dt_draw.draw_time)) {
+                            self.$router.push('/Participants/' + self.dt_draw.id)
+                        }
+
                         self.getDrawParticipants()
                         self.checkAllPrizes()
                     })

@@ -82,7 +82,7 @@
                 <v-col cols="12" class="pt-0">
                     <v-btn block color="error" large @click="cancelDraw">Cancel Draw</v-btn>
                 </v-col>
-              
+
             </v-row>
             <v-snackbar color="success" v-model="snackbar" :timeout="2000">
                 Draw successfully updated
@@ -177,17 +177,31 @@
             deleteIMG(directory) {
                 let self = this
                 self.showImage = false
-                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'delete?path=' + directory + '/' + self.draw.id)
-                    .then(r => {
-                        console.log(r.data);
-                        if (directory == "DrawTime/draw_background") {
-                            self.draw.bk_image = ""
+                self.$refs.YesNoModal.show("error", "Delete Image", "Are you sure you want to delete this image?",
+                    afterRuturn => {
+                        if (afterRuturn) {
+                            self.showImage = false
+                            axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'delete?path=' + directory +
+                                    '/' + self.draw.id)
+                                .then(r => {
+                                    console.log(r.data);
+                                    if (directory == "DrawTime/draw_background") {
+                                        self.draw.bk_image = ""
+                                    } else {
+                                        self.draw.title_image = ''
+                                    }
+                                    self.updateDraw(false)
+                                    self.showImage = true
+                                }).catch(e => {
+                                    alert("error deleteing image " + e.toString())
+                                    self.showImage = true
+                                })
                         } else {
-                            self.draw.title_image = ''
+                            self.showImage = true
                         }
-                        self.updateDraw(false)
-                        self.showImage = true
+
                     })
+
             },
             getImg(directory) {
                 let self = this
@@ -215,8 +229,8 @@
                                 .draw.id, formData, config)
                             .then(r => {
                                 self.showImage = true
-                                self.draw.title_image = 'draw_title/' + self
-                                    .draw.id
+                                self.draw.title_image =  self
+                                    .draw.id + '.png'
                                 self.updateDraw(false)
                                 console.log(r.data);
                             })
@@ -226,7 +240,7 @@
             uploadBackImage(e) {
                 let self = this;
                 let file = e.target.files[0];
-                self.$refs.Cropper.show(file, null, afterComplete => {
+                self.$refs.Cropper.show(file, 1.7777777777, afterComplete => {
                     self.showImage = false
                     const formData = new FormData();
                     formData.append('file', file)
@@ -242,7 +256,7 @@
                             formData, config)
                         .then(r => {
                             console.log(r.data);
-                            self.draw.bk_image = 'draw_background/' + self.draw.id
+                            self.draw.bk_image =self.draw.id+'.png'
                             self.showImage = true
                             self.updateDraw(false)
                         }).catch(err => {
@@ -314,7 +328,12 @@
                 self.$refs.YesNoModal.show("error", "Delete Prize", "Are you sure you wish to delete this prize?",
                     value => {
                         if (value) {
+                            self.delete(`dt_draw_prize?id=`+item.id).then(r=>{
                             self.draw.prizes.splice(self.draw.prizes.indexOf(item), 1)
+                            }).catch(e=>{
+                                alert("failed to delete prize" + e.toString())
+                                console.error(e);
+                            })
                         }
                     })
             },

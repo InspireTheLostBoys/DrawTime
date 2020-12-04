@@ -19,9 +19,14 @@
                             <label>Description</label>
                             <v-text-field v-model="prize.description" dense outlined></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="6">
                             <v-checkbox @change="changeType(0)" v-model="prize.show_value" dense outlined
                                 label="Show Value"></v-checkbox>
+                        </v-col>
+                         <v-col cols="6">
+                            <v-checkbox @change="changeType(1)" v-model="prize.percentage_of_pot" dense outlined
+                                label="Use Percentage of Pot">
+                            </v-checkbox>
                         </v-col>
                         <v-col cols="12" v-if="prize.show_value">
                             <label>Value</label>
@@ -30,11 +35,6 @@
                         <v-col cols="12" v-if="prize.show_value">
                             <label>Cost</label>
                             <v-text-field v-model="prize.prize_cost" dense outlined type="number"></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-checkbox @change="changeType(1)" v-model="prize.percentage_of_pot" dense outlined
-                                label="Use Percentage of Pot">
-                            </v-checkbox>
                         </v-col>
                         <v-col cols="12" v-if="prize.percentage_of_pot">
                             <label>Percentage</label>
@@ -93,11 +93,24 @@
             deleteIMG() {
                 let self = this
                 self.showImage = false
-                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + '/delete?path=DrawTime/Prizes/' + self.prize.id)
-                    .then(r => {
-                        self.prize.prize_image = ''
-                        self.put(`dt_draw_prize`, self.prize).then(er => {})
-                        self.showImage = true
+                self.$refs.YesNoModal.show("error", "Delete Image", "Are you sure you want to delete this image?",
+                    afterRuturn => {
+                        if (afterRuturn) {
+                            self.showImage = false
+                            axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS +
+                                    '/delete?path=DrawTime/Prizes/' + self.prize.id)
+                                .then(r => {
+                                    self.prize.prize_image = ''
+                                    self.put(`dt_draw_prize`, self.prize).then(er => {})
+                                    self.showImage = true
+                                }).catch(e => {
+                                    alert("error deleteing image " + e.toString())
+                                    self.showImage = true
+                                })
+                        } else {
+                            self.showImage = true
+                        }
+
                     })
             },
             openFileBackGroundDialog() {
@@ -151,7 +164,7 @@
                                 config)
                             .then(r => {
                                 self.showImage = true
-                                self.prize.prize_image = 'Prizes/' + self.prize.id
+                                self.prize.prize_image = self.prize.id+'.png'
                                 self.put(`dt_draw_prize`, self.prize).then(er => {
                                     console.log("updated prize", er);
                                 })
@@ -189,10 +202,9 @@
                         afterReturn => {})
                 } else {
                     if (self.prize.show_value && parseFloat(self.prize.prize_cost) >= parseFloat(self.prize
-                        .prize_value)) {
+                            .prize_value)) {
                         self.$refs.ErrorDialog.show("Prize value must be greater than prize cost",
-                            afterReturn => {
-                            })
+                            afterReturn => {})
                     } else {
                         self.submit()
                     }

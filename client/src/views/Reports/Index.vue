@@ -29,9 +29,7 @@
                     </datetime>
                 </v-col>
             </v-row>
-            <v-row>
-
-            </v-row>
+         
             <v-row no-gutters justify="center">
                 <table style="width: 100%;" class="blueTable">
                     <tr style="text-align: left">

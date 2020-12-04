@@ -59,5 +59,27 @@ namespace WebApi.Controllers
             return retval;
         }
 
+
+        [HttpDelete]
+        public PrizeResponse delete(int id)
+        {
+            PrizeResponse retval = new PrizeResponse();
+
+            try
+            {
+                var deletePrize = _context.dt_draw_prize.Where(x => x.id == id).FirstOrDefault();
+                _context.Entry(deletePrize).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+                _context.SaveChanges();
+                retval.Success = true;
+                return retval;
+            }
+            catch (Exception exc)
+            {
+                retval.SetError($"Failed to update Prize.", exc);
+            }
+
+            return retval;
+        }
+
     }
 }

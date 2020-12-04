@@ -38,12 +38,15 @@
         </v-container>
         <Participants ref="participantsModal" />
         <ErrorDialog ref="ErrorDialog" />
+        <prizeModal ref="prizeModal" />
+
     </div>
 </template>
 
 <script>
     import PrizeList from './components/prize-list.vue'
     import Participants from './components/participants-modal.vue'
+    import prizeModal from './components/prize-modal.vue'
 
     import {
         Datetime
@@ -51,6 +54,7 @@
 
     export default {
         components: {
+            prizeModal,
             PrizeList,
             Datetime,
             Participants
@@ -83,8 +87,8 @@
                     self.$refs.ErrorDialog.show("Please ensure all draw details are filled in",
                         val => {})
                 } else {
-                    console.log(self.drawType == 2 && parseFloat(self.ticketCost) <= 0,self.drawType);
-                    
+                    console.log(self.drawType == 2 && parseFloat(self.ticketCost) <= 0, self.drawType);
+
                     if (self.drawType == 2 && parseFloat(self.ticketCost) <= 0) {
                         self.$refs.ErrorDialog.show("Ticket Cost must be greater than 0",
                             val => {})
@@ -92,6 +96,28 @@
                         self.createDraw()
                     }
                 }
+            },
+            addPrize(draw, callback) {
+                let self = this
+                let prize = {
+                    id: 0,
+                    draw_id: draw.id,
+                    description: "New prize " + 1,
+                    sequence_no: 1,
+                    show_value: true,
+                    percentage_of_pot: false,
+                    pot_percentage: 0,
+                    prize_value: 2,
+                    prize_cost: 1
+                }
+                self.post('dt_draw_prize', prize).then(r => {
+                    console.log("add prize", r.data);
+
+                    self.$refs.prizeModal.show(r.data.dt_draw_prize, newPrize => {
+                        let addablePrize = JSON.parse(JSON.stringify(newPrize))
+                        callback()
+                    })
+                })
             },
             createDraw() {
                 let self = this;
@@ -111,10 +137,13 @@
                 request.draw_time = self.FormatDateTime(request.draw_time)
                 self.post('dt_draw', request)
                     .then(r => {
-                        console.log("create DRAW", r);
-                        self.$router.push('/EditDraw/' + r.data.dt_draw.id)
+                        self.addPrize(r.data.dt_draw, cb => {
+                            self.$router.push('/EditDraw/' + r.data.dt_draw.id)
+                        })
                     })
                     .catch(e => {
+                        console.log(e);
+                        
                         alert("Failed to create draw");
                     })
             }

@@ -81,7 +81,8 @@
                         if (afterRuturn) {
                             self.delete('playlists?id=' + item.id).then(r => {
                                 self.getAll()
-                                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'delete/' +
+                                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS +
+                                        'delete/?path=Drawtime/' +
                                         "Ads" + '/' + item.id)
                                     .then(r => {})
                             })
@@ -100,6 +101,9 @@
             addAdvert() {
                 let self = this
                 self.$refs.Prompt.show("info", "Please Enter a new advert name", "advert name", afterRuturn => {
+                    var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+
                     let newAd = {
                         id: 0,
                         description: afterRuturn,
@@ -108,7 +112,7 @@
                         line3: "",
                         line4: "",
                         show_from: new Date(),
-                        show_to: new Date(),
+                        show_to: tomorrow,
                     }
                     self.post('playlists', newAd).then(r => {
                         self.getAll()

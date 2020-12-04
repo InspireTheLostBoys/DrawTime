@@ -37,7 +37,7 @@
                         </v-col>
                         <v-col class="pa-1" cols="12" lg="6" md="6">
                             <label></label>
-                            <v-checkbox  label="use date range" v-model="useDateRange" @change="setDates()">
+                            <v-checkbox label="use date range" v-model="useDateRange" @change="setDates()">
 
                             </v-checkbox>
                         </v-col>
@@ -52,7 +52,7 @@
                             </datetime>
                         </v-col>
                         <v-col cols="12" style="text-align: left;">
-                            <label>AD Image <v-btn icon color="error" @click="deleteIMG('DrawTime/Ads/')">
+                            <label>Advert Image <v-btn icon color="error" @click="deleteIMG()">
                                     <v-icon>mdi-delete
                                     </v-icon>
                                 </v-btn> </label>
@@ -65,6 +65,8 @@
                     </v-row>
                 </v-container>
             </v-card>
+            <YesNoModal ref="YesNoModal" />
+
             <Cropper ref="Cropper" />
             <input accept="image/*" ref="FileBackGround" @change="uploadtitleImage" type="file" style="display: none;">
         </v-dialog>
@@ -72,6 +74,8 @@
 </template>
 <script>
     import axios from 'axios'
+    import YesNoModal from "@/components/YesNoModal.vue"
+
     import Cropper from "@/components/Cropper.vue"
     import {
         Datetime
@@ -80,7 +84,8 @@
     export default {
         components: {
             Datetime,
-            Cropper
+            Cropper,
+            YesNoModal
         },
         data() {
             return {
@@ -109,16 +114,30 @@
                     self.ad.show_to = null
                 }
             },
-            deleteIMG(directory) {
+            deleteIMG() {
                 let self = this
-                self.showImage = false
-                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'delete/' + directory + '/' + self.draw.id)
-                    .then(r => {
-                        console.log(r.data);
-                        self.ad.ad_image = ''
-                        self.put(`playlists`, self.ad).then(r => {})
-                        self.showImage = true
-                    })
+                if (self.ad.ad_image != '' && self.ad.ad_image != null) {
+                    self.showImage = false
+                    self.$refs.YesNoModal.show("error", "Delete Advert",
+                        "Are you sure you want to delete this ad image?",
+                        afterRuturn => {
+                            if (afterRuturn) {
+                                axios.delete(process.env.VUE_APP_IMAGE_SERVER_ADDRESS + 'delete?path=DrawTime/' +
+                                        "Ads" + '/' + self.ad.id)
+                                    .then(r => {
+                                        console.log(r.data);
+                                        self.ad.ad_image = ''
+                                        self.put(`playlists`, self.ad).then(r => {})
+                                        self.showImage = true
+                                    }).catch(e => {
+                                        alert("error deleteing image " + e.toString())
+                                        self.showImage = true
+                                    })
+                            } else {
+                                self.showImage = true
+                            }
+                        })
+                }
             },
             validate() {
                 let self = this
@@ -135,7 +154,7 @@
             uploadtitleImage(e) {
                 let self = this;
                 let file = e.target.files[0];
-                self.$refs.Cropper.show(file, null, afterComplete => {
+                self.$refs.Cropper.show(file, 1.7777777777, afterComplete => {
                     const formData = new FormData();
                     self.showImage = false
                     formData.append('file', afterComplete)
@@ -148,9 +167,10 @@
                             .ad.id, formData, config)
                         .then(r => {
                             console.log(r.data);
-                            self.ad.ad_image = 'DrawTime/Ads/' + self.ad.id
-                            self.put(`playlists`, self.ad).then(r => {})
+                            self.ad.ad_image = self.ad.id + '.png'
+                            self.put(`playlists`, self.ad).then(r => {
                             self.showImage = true
+                            })
                         })
                 })
             },

@@ -7,10 +7,13 @@
                         <h3>{{ draw.draw_name }}</h3>
                         <div>{{FormatDateTime(draw.draw_time)}}</div>
                         <div>
+                             <v-chip v-if="checkDrawDate(draw.issue_open)&&!checkDrawDate(draw.issue_close)" label x-small color="primary">
+                                Issue open
+                            </v-chip>
                             <v-chip v-if="checkDrawDate(draw.issue_close)" label x-small color="primary">
                                 Issue Closed
                             </v-chip>
-                            <v-chip v-if="!checkDrawDate(draw.draw_time)" class="ml-1" label x-small color="primary">
+                            <v-chip v-if="checkDrawDate(draw.draw_time)" class="ml-1" label x-small color="primary">
                                 Draw Ready
                             </v-chip>
                         </div>
@@ -35,7 +38,12 @@
             checkDrawDate(date) {
                 let self = this
                 let todayDate = new Date()
-                if (self.FormatDateTime(date) > self.FormatDateTime(todayDate)) {
+                console.log(self.FormatDateTime(date) +' > ' + self.FormatDateTime(todayDate));
+                
+                console.log(self.FormatDateTime(date) > self.FormatDateTime(todayDate));
+                
+                
+                if (self.FormatDateTime(date) < self.FormatDateTime(todayDate)) {
                     return true
                 } else {
                     return false
