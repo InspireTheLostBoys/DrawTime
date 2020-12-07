@@ -142,8 +142,8 @@
             validate() {
                 let self = this
                 if (self.useDateRange) {
-                    self.ad.show_from = self.FormatDateTime(self.ad.show_from)
-                    self.ad.show_to = self.FormatDateTime(self.ad.show_to)
+                    self.ad.show_from = self.FormatDateTimeGMT(self.ad.show_from)
+                    self.ad.show_to = self.FormatDateTimeGMT(self.ad.show_to)
                 }
                 self.put(`playlists`, self.ad).then(r => {
                     self.dialog = false

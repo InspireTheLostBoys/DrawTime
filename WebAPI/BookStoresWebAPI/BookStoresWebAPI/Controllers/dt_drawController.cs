@@ -59,6 +59,8 @@ namespace WebAPI.Controllers
             {
                 var draw_id = draw.id;
                 draw.id = 0;
+                draw.completed = false;
+                draw.cancelled = false;
                 if (draw != null)
                 {
                     draw.id = 0;
@@ -71,7 +73,7 @@ namespace WebAPI.Controllers
                         {
                             item.id = 0;
                             item.draw_id = draw.id;
-                            item.winner_id = 0;
+                            item.winner_id = null;
                             _context.dt_draw_prize.Add(item);
                             _context.SaveChanges();
                         }
@@ -83,6 +85,7 @@ namespace WebAPI.Controllers
                         {
                             item.id = 0;
                             item.draw_id = draw.id;
+                            
                             _context.dt_draw_participant.Add(item);
                             _context.SaveChanges();
                         }

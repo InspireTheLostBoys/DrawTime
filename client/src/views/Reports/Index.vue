@@ -29,14 +29,28 @@
                     </datetime>
                 </v-col>
             </v-row>
-         
+
             <v-row no-gutters justify="center">
+                <label>Reports</label>
                 <table style="width: 100%;" class="blueTable">
                     <tr style="text-align: left">
                         <th v-for="(item,idx) in headers" :key="idx"> {{item.text}}</th>
                     </tr>
                     <tr v-if="reportData!=null" v-for="(item,idx) in reportData" :key="idx">
-                        <td v-for="(head,idx) in headers" :key="idx">{{item[head.value]}}</td>
+                        <td @click="getDrawData(item)" v-for="(head,idx) in headers" :key="idx">{{item[head.value]}}
+                        </td>
+                    </tr>
+                </table>
+            </v-row>
+
+            <v-row class="pt-5" no-gutters  justify="center">
+                <label>Draw Break down </label>
+                <table v-if="drawItems.length>0" style="width: 100%;" class="blueTable">
+                    <tr style="text-align: left">
+                        <th v-for="(item,idx) in drawHeaders" :key="idx"> {{item.text}}</th>
+                    </tr>
+                    <tr v-if="reportData!=null" v-for="(item,idx) in drawItems" :key="idx">
+                        <td v-for="(head,idx) in drawHeaders" :key="idx">{{item[head.value]}}</td>
                     </tr>
                 </table>
             </v-row>
@@ -73,6 +87,35 @@
                         value: "total_tickets_value"
                     },
                 ],
+                drawHeaders: [{
+                        text: "Draw",
+                        value: "draw_name"
+                    },
+                   
+                    {
+                        text: "Tickets",
+                        value: "sum"
+                    },
+                    {
+                        text: "Participant Name",
+                        value: "display_name"
+                    },
+
+                    {
+                        text: "Prize won",
+                        value: "description"
+                    }, {
+                        text: "Prize Cost",
+                        value: "prize_cost",
+
+                    },
+                    {
+                        text: "Prize value",
+                        value: "prize_value",
+
+                    },
+                ],
+                drawItems: [],
                 selectedReportType: 0,
                 reportTypes: [],
                 config: null,
@@ -90,6 +133,16 @@
             this.setReportTypes()
         },
         methods: {
+            getDrawData(item) {
+                let self = this
+                self.post(
+                    `reports/draw?period_start=${self.startPeriod}&period_end=${self.endPeriod}&draw_id=${item.draw_id}`
+                ).then(r => {
+                    console.log(r.data);
+
+                    self.drawItems = r.data
+                })
+            },
             setReportTypes() {
                 let self = this
                 if (self.userAccess.role_id == 1 || self.userAccess.role_id == 0) {

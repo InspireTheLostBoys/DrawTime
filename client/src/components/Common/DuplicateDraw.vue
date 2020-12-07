@@ -40,11 +40,11 @@
                 self.draw.draw_name = self.draw.draw_name + " - Duplicate"
                 self.post(
                     `dt_draw/duplicate?duplicatePrizes=${self.duplicatePrizes}&duplicateParticipants=${self.duplicateParticipants}`,
-                    self.draw).then(r => {
+                    self.draw).then(r => { 
                     self.dialog = false
                     self.$router.push('/Participants/' + r.data.id)
                 })
             }
-        }
+        },
     }
 </script>

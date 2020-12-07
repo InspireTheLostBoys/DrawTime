@@ -2,36 +2,47 @@
     <div>
         <v-container fluid class="fill-height">
             <v-row no-gutters justify="center">
-                <v-col class="pa-1" cols="12" lg="6" md="6">
+                <v-col justify="center" class="pa-1" cols="12" lg="4" md="4">
                     <label>Draw name</label>
                     <v-text-field v-model="drawName" dense outlined></v-text-field>
                 </v-col>
-                <v-col class="pa-1" cols="12" lg="6" md="6">
+            </v-row>
+            <v-row no-gutters justify="center">
+
+                <v-col class="pa-1" cols="12" lg="4" md="4">
                     <label>Draw type</label>
                     <v-select v-model="drawType" :items="drawTypes" dense outlined></v-select>
                 </v-col>
-                <v-col class="pa-1" cols="12" lg="6" md="6">
+            </v-row>
+            <v-row no-gutters justify="center">
+                <v-col class="pa-1" cols="12" lg="4" md="4">
                     <label>Issue open</label>
                     <datetime type="datetime" :minute-step="15" :max-datetime="issueClose" v-model="issueOpen"
                         class="input"></datetime>
                 </v-col>
-                <v-col class="pa-1" cols="12" lg="6" md="6">
+            </v-row>
+            <v-row no-gutters justify="center">
+                <v-col class="pa-1" cols="12" lg="4" md="4">
                     <label>Issue close</label>
                     <datetime type="datetime" :minute-step="15" :min-datetime="issueOpen" v-model="issueClose"
                         class="input"></datetime>
                 </v-col>
-                <v-col class="pa-1" cols="12" lg="6" md="6">
+            </v-row>
+            <v-row no-gutters justify="center">
+                <v-col class="pa-1" cols="12" lg="4" md="4">
                     <label>Draw time</label>
                     <datetime type="datetime" :minute-step="15" v-model="drawTime" :min-datetime="issueClose"
                         class="input"></datetime>
                 </v-col>
-                <v-col class="pa-1" cols="12" lg="6" md="6" v-if="drawType == 2">
+            </v-row>
+            <v-row no-gutters justify="center">
+                <v-col class="pa-1" cols="12"  lg="4" md="4" v-if="drawType == 2">
                     <label>Ticket cost</label>
                     <v-text-field v-model="ticketCost" prefix="R" dense outlined></v-text-field>
                 </v-col>
             </v-row>
             <v-row justify="center">
-                <v-col cols="12" lg="6" md="6" class="pt-0">
+                <v-col cols="12" lg="4" md="4" class="pt-0">
                     <v-btn @click="validate" block color="success" large>Create Draw</v-btn>
                 </v-col>
             </v-row>
@@ -121,6 +132,7 @@
             },
             createDraw() {
                 let self = this;
+               
                 let request = {
                     draw_name: self.drawName,
                     issue_open: self.issueOpen,
@@ -132,9 +144,9 @@
                     cancelled: false,
                     completed: false,
                 }
-                request.issue_open = self.FormatDateTime(request.issue_open)
-                request.issue_close = self.FormatDateTime(request.issue_close)
-                request.draw_time = self.FormatDateTime(request.draw_time)
+                request.issue_open = self.FormatDateTimeGMT(request.issue_open)
+                request.issue_close = self.FormatDateTimeGMT(request.issue_close)
+                request.draw_time = self.FormatDateTimeGMT(request.draw_time)
                 self.post('dt_draw', request)
                     .then(r => {
                         self.addPrize(r.data.dt_draw, cb => {
@@ -143,7 +155,7 @@
                     })
                     .catch(e => {
                         console.log(e);
-                        
+
                         alert("Failed to create draw");
                     })
             }

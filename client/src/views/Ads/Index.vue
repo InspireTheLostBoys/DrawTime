@@ -5,6 +5,11 @@
             <v-col class="pa-1" cols="12" lg="6" md="6">
                 <v-btn class="my-3" large block color="primary" @click="addAdvert">Add Advert</v-btn>
             </v-col>
+     
+            <v-col class="pa-1" cols="12" lg="6" md="6">
+                <v-btn v-if="!showHistory" class="my-3" large block color="primary" @click="switchHistory">show history</v-btn>
+                <v-btn v-if="showHistory" class="my-3" large block color="primary" @click="switchHistory">show current</v-btn>
+            </v-col>
         </v-row>
 
         <v-simple-table dense fixed-header height="calc(100vh - 285px)">
@@ -22,8 +27,26 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-show="!showHistory">
                     <tr v-for="item in playlists" :key="item.description">
+                        <td>
+                            <v-card v-if="showImage" height="50" width="88">
+                                <object height="50" width="88" :data="getImg('Ads',item)" type="image/png">
+                                    <img height="100%" src="img/no-image.png" style="width:100% !important">
+                                </object>
+                            </v-card>
+                        </td>
+                        <td>{{ item.description }}</td>
+                        <td>
+                            <a @click="openEdit(item)">Edit</a>
+                            <v-btn @click="deleteItem(item)" icon>
+                                <v-icon color="error"> mdi-delete </v-icon>
+                            </v-btn>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-show="showHistory">
+                    <tr v-for="item in historyPlaylist" :key="item.description">
                         <td>
                             <v-card v-if="showImage" height="50" width="88">
                                 <object height="50" width="88" :data="getImg('Ads',item)" type="image/png">
@@ -61,7 +84,9 @@
         data() {
             return {
                 showImage: true,
-                playlists: []
+                playlists: [],
+                historyPlaylist: [],
+                showHistory: false
             }
         },
         mounted() {
@@ -69,6 +94,20 @@
             self.getAll()
         },
         methods: {
+
+            switchHistory() {
+                let self = this
+                self.showHistory = !self.showHistory
+            },
+            checkDrawDate(date) {
+                let self = this
+                let todayDate = new Date()
+                if (self.FormatDateTime(date) > self.FormatDateTime(todayDate)) {
+                    return true
+                } else {
+                    return false
+                }
+            },
             getImg(directory, item) {
                 let self = this
                 return process.env.VUE_APP_IMAGE_SERVER_ADDRESS + "DrawTime/" + directory + '/' + item.id + ".png"
@@ -124,9 +163,17 @@
             getAll() {
                 let self = this
                 self.showImage = false
+                self.playlists = []
+                self.historyPlaylist = []
                 self.get(`playlists`).then(r => {
                     console.log(r);
-                    self.playlists = r.data.dt_ads
+                    r.data.dt_ads.forEach(item => {
+                        if (self.checkDrawDate(item.show_to)) {
+                            self.playlists.push(item)
+                        } else {
+                            self.historyPlaylist.push(item)
+                        }
+                    })
                     self.showImage = true
 
                 })

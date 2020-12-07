@@ -13,20 +13,20 @@
                 </v-col>
                 <v-col cols="12">
                     <label>Issue open</label>
-                    <datetime type="datetime" :minute-step="15" :max-datetime="draw.issue_close"
-                        v-model="draw.issue_open" class="input">
+                    <datetime type="datetime" format="yyyy-MM-dd HH:mm:ss" :minute-step="15"
+                        :max-datetime="draw.issue_close" v-model="draw.issue_open" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Issue close</label>
-                    <datetime type="datetime" :minute-step="15" :min-datetime="draw.issue_open"
-                        v-model="draw.issue_close" class="input">
+                    <datetime type="datetime" format="yyyy-MM-dd HH:mm:ss" :minute-step="15"
+                        :min-datetime="draw.issue_open" v-model="draw.issue_close" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12">
                     <label>Draw time</label>
-                    <datetime type="datetime" :minute-step="15" :min-datetime="draw.issue_close"
-                        v-model="draw.draw_time" class="input">
+                    <datetime type="datetime" format="yyyy-MM-dd HH:mm:ss" :minute-step="15"
+                        :min-datetime="draw.issue_close" v-model="draw.draw_time" class="input">
                     </datetime>
                 </v-col>
                 <v-col cols="12" v-if="draw.draw_type == 2">
@@ -34,7 +34,6 @@
                     <v-text-field v-model="draw.ticket_cost" prefix="R" dense outlined></v-text-field>
                 </v-col>
             </v-row>
-
             <input accept="image/*" ref="FileBackGround" @change="uploadBackImage" type="file" style="display: none;">
             <input accept="image/*" ref="fileTitleDialog" @change="uploadtitleImage" type="file" style="display: none;">
             <v-row>
@@ -133,7 +132,9 @@
                 progress: 100,
                 file: null,
                 fileChanged: false,
-
+                issue_close: null,
+                issue_open: null,
+                draw_time: null,
                 draw: null,
                 drawTypes: [{
                         text: 'No entry fee',
@@ -148,7 +149,12 @@
         },
         mounted() {
             let self = this;
-            self.getDraw();
+            self.getDraw(cb => {
+
+                // self.draw.issue_close = self.issue_close
+                // self.draw.issue_open = self.issue_open
+                // self.draw.draw_time = self.draw_time
+            });
         },
         methods: {
             checkImage(file, callback) {
@@ -229,7 +235,7 @@
                                 .draw.id, formData, config)
                             .then(r => {
                                 self.showImage = true
-                                self.draw.title_image =  self
+                                self.draw.title_image = self
                                     .draw.id + '.png'
                                 self.updateDraw(false)
                                 console.log(r.data);
@@ -256,7 +262,7 @@
                             formData, config)
                         .then(r => {
                             console.log(r.data);
-                            self.draw.bk_image =self.draw.id+'.png'
+                            self.draw.bk_image = self.draw.id + '.png'
                             self.showImage = true
                             self.updateDraw(false)
                         }).catch(err => {
@@ -291,12 +297,17 @@
                 if (self.draw.draw_name == "" ||
                     self.draw.issue_open == "" ||
                     self.draw.issue_close == "" ||
-                    self.draw.draw_time == "" ||
-                    (self.draw.entry_fee == true && parseFloat(self.draw.ticket_cost) < 1)) {
+                    self.draw.draw_time == "") {
                     self.$refs.ErrorDialog.show("Please ensure all draw details are filled in",
                         val => {})
                 } else {
-                    self.updateDraw(true)
+                    if (
+                        (self.draw.entry_fee == true && parseFloat(self.draw.ticket_cost) < 1)) {
+                        self.$refs.ErrorDialog.show("Ticket cost must be greater than 0",
+                            val => {})
+                    } else {
+                        self.updateDraw(true)
+                    }
                 }
             },
             cancelDraw() {
@@ -328,9 +339,9 @@
                 self.$refs.YesNoModal.show("error", "Delete Prize", "Are you sure you wish to delete this prize?",
                     value => {
                         if (value) {
-                            self.delete(`dt_draw_prize?id=`+item.id).then(r=>{
-                            self.draw.prizes.splice(self.draw.prizes.indexOf(item), 1)
-                            }).catch(e=>{
+                            self.delete(`dt_draw_prize?id=` + item.id).then(r => {
+                                self.draw.prizes.splice(self.draw.prizes.indexOf(item), 1)
+                            }).catch(e => {
                                 alert("failed to delete prize" + e.toString())
                                 console.error(e);
                             })
@@ -368,28 +379,58 @@
                     })
                 }
             },
-            getDraw() {
+            getDraw(callback) {
                 let self = this;
                 let drawID = self.$route.params.draw_id;
                 self.get('dt_draw/' + drawID)
                     .then(r => {
+
+
+
+
                         self.draw = r.data.dt_draw;
+                        //  self.draw.issue_open = self.FormatDateTimeGMT(r.data.dt_draw.issue_open)
+                        // self.draw.issue_close = self.FormatDateTimeGMT(r.data.dt_draw.issue_close)
+                        // self.draw.draw_time = self.FormatDateTimeGMT(r.data.dt_draw.draw_time)
+
+
+                        console.log('self.issue_open', self.draw.issue_open);
+                        console.log('self.issue_open', self.FormatDateTime(self.draw.issue_open));
+
+
+
+                        console.log('self.issue_close', self.draw.issue_close);
+                        console.log('self.draw_time', self.draw.draw_time);
+                        console.log("getDraw", self.draw);
+
+                        callback()
                     })
             },
             updateDraw(reload) {
                 let self = this;
+                self.draw.issue_open = self.FormatDateTimeGMT(self.draw.issue_open)
+                self.draw.issue_close = self.FormatDateTimeGMT(self.draw.issue_close)
+                self.draw.draw_time = self.FormatDateTimeGMT(self.draw.draw_time)
 
-                self.draw.issue_open = self.FormatDateTime(self.draw.issue_open)
-                self.draw.issue_close = self.FormatDateTime(self.draw.issue_close)
-                self.draw.draw_time = self.FormatDateTime(self.draw.draw_time)
-                self.put('dt_draw', self.draw)
-                    .then(r => {
-                        console.log("update draw", r);
-                        // self.snackbar = true
-                        if (reload) {
-                            self.$router.back()
-                        }
-                    })
+                if (self.draw.draw_time < self.draw.issue_close) {
+                    self.$refs.ErrorDialog.show(
+                        "Please ensure Draw time is after issue close",
+                        res => {})
+
+                } else {
+                    self.put('dt_draw', self.draw)
+                        .then(r => {
+                            console.log("update draw", r);
+                            // self.snackbar = true
+                            if (reload) {
+                                self.$router.back()
+                            }
+                        })
+                }
+                console.log("self.draw.issue_open", self.draw.issue_open);
+                console.log("self.draw.issue_close", self.draw.issue_close);
+                console.log("self.draw.draw_time", self.draw.draw_time);
+
             }
         }
     }

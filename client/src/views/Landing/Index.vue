@@ -58,7 +58,6 @@
             canPlay(draw) {
                 let self = this
                 self.get(`dt_draw/CanPlay?draw_id=${draw.id}`).then(r => {
-                    console.log(r.data);
 
                     if (r.data) {
                         if (self.userAccess.role_id != 9) {
@@ -77,15 +76,11 @@
 
                 self.get('dt_draw')
                     .then(r => {
-                        console.log("draws", r.data);
-
                         self.draws = r.data;
                     })
             },
             getUserAccess() {
                 let self = this
-                console.log(localStorage.getItem("userDetails"));
-
                 self.userAccess = JSON.parse(localStorage.getItem("userDetails"));
             }
         }

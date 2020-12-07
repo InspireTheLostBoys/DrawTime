@@ -38,11 +38,6 @@
             checkDrawDate(date) {
                 let self = this
                 let todayDate = new Date()
-                console.log(self.FormatDateTime(date) +' > ' + self.FormatDateTime(todayDate));
-                
-                console.log(self.FormatDateTime(date) > self.FormatDateTime(todayDate));
-                
-                
                 if (self.FormatDateTime(date) < self.FormatDateTime(todayDate)) {
                     return true
                 } else {
